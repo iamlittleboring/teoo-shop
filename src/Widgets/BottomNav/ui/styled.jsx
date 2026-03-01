@@ -10,7 +10,8 @@ const BottomNav = styled.nav`
     justify-content: space-around;
     z-index: 1000;
     padding: 20px;
-    background-color: #fff;
+    background-color: ${({ theme }) =>
+        theme.mode === "light" ? theme.ui.bottomNav.bgLight : theme.ui.bottomNav.bgDark};
     border-radius: 10px 10px 0 0;
 
     @media (min-width: 1000px) {

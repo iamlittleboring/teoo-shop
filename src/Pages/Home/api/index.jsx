@@ -1,12 +1,9 @@
-import axios from "axios";
+import { getProducts } from "@entities/ProductCard/api";
 
 const fetchProducts = async () => {
     try {
-        const response = await axios.get(
-            "https://jsonplaceholder.typicode.com/posts"
-        );
-        return response.data;
-    } catch (error) {
+        return await getProducts();
+    } catch {
         throw new Error("Failed to load products");
     }
 };

@@ -1,47 +1,94 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 
+import { getProductById } from "@entities/ProductCard/api";
 import { BreadCrumbs } from "@features/BreadCrumbs";
 import { CartButton } from "@features/CartButton";
 import { ColorPicker, SizePicker } from "@features/Picker";
-import { Container } from "@shared/styles";
+import { Container, Text } from "@shared/styles";
 import { ImageViewer } from "@widgets/ImageViewer";
 
 import Styled from "./styled";
 
-import photo1 from "@shared/assets/images/product/1.jpg";
-import photo2 from "@shared/assets/images/product/2.jpg";
-import photo3 from "@shared/assets/images/product/3.jpg";
-import photo4 from "@shared/assets/images/product/4.jpg";
-import photo5 from "@shared/assets/images/product/5.jpg";
-import photoT1 from "@shared/assets/images/product/TYANKAAAAAAAAA.jpg";
-import photoT2 from "@shared/assets/images/product/TYANKAAAAAAAAA2.jpg";
-
-const sizes = [
-    {
-        id: 1,
-        size: "XS",
-    },
-    {
-        id: 2,
-        size: "S",
-    },
-];
-
-const colors = [
-    {
-        id: 1,
-        color: "#FFC285",
-    },
-    {
-        id: 2,
-        color: "#FFF",
-    },
-];
-
 const Product = () => {
-    const [size, onSize] = useState(1);
-    const [color, onColor] = useState(1);
-    const images = [photo1, photo2, photo3, photo4, photo5, photoT1, photoT2];
+    const { id } = useParams();
+    const [product, setProduct] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedSize, setSelectedSize] = useState(null);
+    const [selectedColor, setSelectedColor] = useState(null);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadProduct = async () => {
+            setIsLoading(true);
+            setError(null);
+
+            const response = await getProductById(id);
+
+            if (!isMounted) {
+                return;
+            }
+
+            if (!response) {
+                setError("Product not found");
+                setProduct(null);
+                setIsLoading(false);
+                return;
+            }
+
+            setProduct(response);
+            setSelectedSize(response.availableSizes[0]);
+            setSelectedColor(response.availableColors[0]);
+            setIsLoading(false);
+        };
+
+        loadProduct().catch(() => {
+            if (isMounted) {
+                setError("Failed to load product");
+                setIsLoading(false);
+            }
+        });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [id]);
+
+    const sizeOptions = useMemo(
+        () =>
+            (product?.availableSizes || []).map((sizeValue) => ({
+                id: sizeValue,
+                size: sizeValue,
+            })),
+        [product]
+    );
+
+    const colorOptions = useMemo(
+        () =>
+            (product?.availableColors || []).map((colorValue) => ({
+                id: colorValue,
+                color: colorValue,
+            })),
+        [product]
+    );
+
+    if (isLoading) {
+        return (
+            <Container>
+                <Text>Loading product...</Text>
+            </Container>
+        );
+    }
+
+    if (error || !product) {
+        return (
+            <Container>
+                <Text>{error || "Product not found"}</Text>
+            </Container>
+        );
+    }
 
     return (
         <>
@@ -53,33 +100,37 @@ const Product = () => {
             <section>
                 <Container>
                     <Styled.Box>
-                        <ImageViewer images={images} />
+                        <ImageViewer images={product.images} title={product.name} />
                         <Styled.Data>
-                            <Styled.Title>T-shirt</Styled.Title>
-                            <Styled.Desc>
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Necessitatibus doloribus eos
-                                maiores? Distinctio eaque, suscipit veniam minus
-                                obcaecati, nesciunt voluptas perferendis,
-                                reiciendis quidem nobis dolorum consectetur
-                                ipsum sapiente dolorem id.
-                            </Styled.Desc>
+                            <Styled.Title>{product.name}</Styled.Title>
+                            <Text>{product.price} грн</Text>
+                            <Styled.Desc>{product.description}</Styled.Desc>
                             <Styled.BuyItems>
                                 <SizePicker
-                                    items={sizes}
-                                    selected={size}
-                                    onSelect={onSize}
-                                    itemHeight={"52px"}
-                                    itemWidth={"52px"}
+                                    items={sizeOptions}
+                                    selected={selectedSize}
+                                    onSelect={setSelectedSize}
+                                    itemHeight="52px"
+                                    itemWidth="52px"
                                 />
                                 <ColorPicker
-                                    items={colors}
-                                    selected={color}
-                                    onSelect={onColor}
-                                    itemHeight={"52px"}
-                                    itemWidth={"52px"}
+                                    items={colorOptions}
+                                    selected={selectedColor}
+                                    onSelect={setSelectedColor}
+                                    itemHeight="52px"
+                                    itemWidth="52px"
                                 />
-                                <CartButton />
+                                <CartButton
+                                    product={{
+                                        id: product.id,
+                                        image: product.images[0],
+                                        name: product.name,
+                                        price: product.price,
+                                    }}
+                                    selectedColor={selectedColor}
+                                    selectedSize={selectedSize}
+                                    styleVariant={product.cardVariant}
+                                />
                             </Styled.BuyItems>
                         </Styled.Data>
                     </Styled.Box>

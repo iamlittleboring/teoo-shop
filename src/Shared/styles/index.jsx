@@ -58,7 +58,7 @@ const Input = styled.input`
     font-weight: 800;
     font-size: 16px;
     border: 0;
-    border-bottom: #ececec solid 2px;
+    border-bottom: ${({ theme }) => theme.ui.input.borderBottom} solid 2px;
     outline: none;
     color: ${({ theme }) => theme.colors.text};
 
@@ -121,7 +121,7 @@ const GlobalStyles = createGlobalStyle`
         text-decoration: none;
         color: inherit;
     }
-    
+
 `;
 
 export {

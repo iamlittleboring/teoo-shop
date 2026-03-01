@@ -1,36 +1,59 @@
-# Teoo shop
+# Teoo Shop
 
-Welcome to **Teoo Shop**, an online store built using modern front-end technologies and following the Feature-Sliced Design (FSD) architecture. This project aims to provide a scalable and maintainable e-commerce solution with React as the core framework.
+Teoo Shop is a React + Vite storefront built with Feature-Sliced Design ideas.
 
-## 🌟 Features
-- **Modern UI**: Responsive and user-friendly design for seamless shopping experiences.
-- **Feature-Sliced Design**: Clean project structure for better scalability and maintainability.
-- **State Management**: Utilizes popular state management libraries for predictable application behavior.
-- **Dynamic Routing**: Efficient navigation using React Router.
+## Stack
 
-## 🏗️ Project Structure (FSD)
-```
-src/
-├── app/                # Application initialization (providers, configs, etc.)
-├── pages/              # Page components (route-level components)
-├── widgets/            # UI blocks made up of features
-├── features/           # Reusable domain-level functionality (e.g., cart, product details)
-├── entities/           # Core domain entities (e.g., product, user)
-├── shared/             # Shared utilities, constants, and components
-```
+- React 18
+- React Router
+- Styled Components
+- Vite
+- ESLint
 
-## 💻 Installation
-
-Install the dependencies and devDependencies and start the server.
+## Run locally
 
 ```sh
-git clone https://github.com/your-username/teoo-shop.git
-cd teoo-shop
 npm i
 npm run dev
 ```
-Open your browser and navigate to http://localhost:3000.
 
-🛍️ Happy shopping with Teoo Shop!
+Open [http://localhost:5173](http://localhost:5173).
 
-If you have any questions or feedback, feel free to reach out or create an issue in the repository. 😊
+## Commands
+
+```sh
+npm run dev      # start dev server
+npm run lint     # static checks
+npm test         # unit tests (node:test)
+npm run build    # production build
+npm run preview  # preview production build
+```
+
+## Current project structure
+
+```text
+src/
+├── App/
+├── Pages/
+├── Widgets/
+├── Features/
+├── Entities/
+└── Shared/
+```
+
+## What was improved
+
+- Replaced placeholder API flow with a real in-app product catalog API.
+- Added product details loading by route id.
+- Added grouped collections on Home (t-shirts, hoodies, accessories).
+- Implemented global cart state with `localStorage` persistence.
+- Added global favorites state with `localStorage` persistence.
+- Connected cart/favorites across product cards, product page, header and mobile bottom nav.
+- Reworked cart modal with editable quantity and total price.
+- Added favorites modal with quick remove/clear actions.
+- Unified icon actions (cart/like/header) through shared `IconActionButton`.
+- Moved core UI colors/gradients to central theme config (`theme.ui.*`).
+- Improved accessibility in buttons/modals (labels, dialog semantics, Esc close).
+- Reduced product image sizes for faster load.
+- Added unit tests for cart business logic.
+- Added GitHub Actions CI (`lint`, `test`, `build`).

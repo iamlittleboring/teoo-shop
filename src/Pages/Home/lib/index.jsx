@@ -1,30 +1,44 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import { fetchProducts } from "../api";
 
 const useLoadProducts = () => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
+        let isMounted = true;
+
         const fetchData = async () => {
             setIsLoading(true);
-            setIsError(false);
+            setError(null);
+
             try {
                 const response = await fetchProducts();
 
-                setData(response);
-            } catch (error) {
-                setIsError(true);
+                if (isMounted) {
+                    setData(response);
+                }
+            } catch {
+                if (isMounted) {
+                    setError("Could not load products");
+                }
             } finally {
-                setIsLoading(false);
+                if (isMounted) {
+                    setIsLoading(false);
+                }
             }
         };
 
         fetchData();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
-    return { data, isLoading, isError };
+    return { data, error, isLoading };
 };
 
 export { useLoadProducts };

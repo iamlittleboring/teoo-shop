@@ -1,34 +1,85 @@
 import { ProductCard } from "@entities/ProductCard";
-import { Container, Title } from "@shared/styles";
+import { Text, Title } from "@shared/styles";
+
 import { useLoadProducts } from "../lib";
 
 import Styled from "./styled";
-import { Link } from "react-router-dom";
+
+const categoryConfig = {
+    tshirts: {
+        title: "T-Shirts",
+        subtitle: "Daily essentials",
+        variant: "classic",
+    },
+    hoodies: {
+        title: "Hoodies",
+        subtitle: "Street layer",
+        variant: "street",
+    },
+    accessories: {
+        title: "Accessories",
+        subtitle: "Final touch",
+        variant: "clean",
+    },
+};
 
 const Home = () => {
-    const { data: products, isLoading, isError } = useLoadProducts();
-    // console.log(products);
+    const { data: products, isLoading, error } = useLoadProducts();
 
-    if (isLoading) return <p>is loading</p>;
-    if (isError) return <p>is error</p>;
+    const groupedProducts = products.reduce((acc, product) => {
+        if (!acc[product.category]) {
+            acc[product.category] = [];
+        }
+
+        acc[product.category].push(product);
+
+        return acc;
+    }, {});
+
+    if (isLoading) {
+        return (
+            <Styled.Shell>
+                <Text>Loading products...</Text>
+            </Styled.Shell>
+        );
+    }
+
+    if (error) {
+        return (
+            <Styled.Shell>
+                <Text>{error}</Text>
+            </Styled.Shell>
+        );
+    }
 
     return (
-        <Container>
-            {/* <Link to={""} /> */}
-            <Title>T-shorts</Title>
-            <Styled.Products>
-                {products.map(({ id }) => (
-                    <ProductCard
-                        key={id}
-                        id={id}
-                        title={"T-short"}
-                        desc={"123123"}
-                        image={"https://placehold.co/600"}
-                        price={300}
-                    />
-                ))}
-            </Styled.Products>
-        </Container>
+        <Styled.Shell>
+            {Object.entries(categoryConfig).map(([categoryKey, config]) => {
+                const items = groupedProducts[categoryKey] || [];
+
+                if (items.length === 0) {
+                    return null;
+                }
+
+                return (
+                    <Styled.Section key={categoryKey}>
+                        <Styled.Header>
+                            <Title>{config.title}</Title>
+                            <Styled.SubTitle>{config.subtitle}</Styled.SubTitle>
+                        </Styled.Header>
+                        <Styled.Products>
+                            {items.map((product) => (
+                                <ProductCard
+                                    key={product.id}
+                                    product={product}
+                                    variant={product.cardVariant || config.variant}
+                                />
+                            ))}
+                        </Styled.Products>
+                    </Styled.Section>
+                );
+            })}
+        </Styled.Shell>
     );
 };
 

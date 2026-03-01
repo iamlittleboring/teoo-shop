@@ -36,27 +36,3 @@ const ColorPicker = ({ items, selected, onSelect, itemWidth, itemHeight }) => {
 };
 
 export { SizePicker, ColorPicker };
-
-// <Picker items={colors} selected={color} onSelect={setColor} />
-
-// const colors = [
-//     {
-//         id: 1,
-//         color: "#FFC285",
-//     },
-//     {
-//         id: 2,
-//         color: "#FFF",
-//     },
-// ];
-
-// const sizes = [
-//     {
-//         id: 1,
-//         size: "XS",
-//     },
-//     {
-//         id: 2,
-//         size: "S",
-//     },
-// ];

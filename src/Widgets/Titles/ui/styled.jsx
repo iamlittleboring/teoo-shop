@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+const Wrap = styled.section`
+    text-align: center;
+`;
+
 const MainTitle = styled.h1`
     margin-top: 70px;
     font-size: 64px;
@@ -14,6 +18,6 @@ const SubTitle = styled.h2`
     margin-bottom: 70px;
 `;
 
-const Styled = { MainTitle, SubTitle };
+const Styled = { Wrap, MainTitle, SubTitle };
 
 export default Styled;

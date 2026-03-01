@@ -19,11 +19,13 @@ const BottomNav = () => {
                 icon={bulb}
                 width="52px"
                 height="52px"
+                isActive={isDarkMode}
+                ariaLabel="Toggle theme"
             />
-            <Button icon={instagram} width="52px" height="52px" />
-            <Button icon={cart} width="52px" height="52px" />
-            <Button icon={user} width="52px" height="52px" />
-            <Button icon={burger} width="52px" height="52px" />
+            <Button icon={instagram} width="52px" height="52px" ariaLabel="Instagram" />
+            <Button icon={cart} width="52px" height="52px" ariaLabel="Cart" />
+            <Button icon={user} width="52px" height="52px" ariaLabel="Account" />
+            <Button icon={burger} width="52px" height="52px" ariaLabel="Menu" />
         </Styled.BottomNav>
     );
 };

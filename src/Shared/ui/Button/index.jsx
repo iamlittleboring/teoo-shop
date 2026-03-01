@@ -1,10 +1,29 @@
-import Styled from "./styled";
+import IconActionButton from "@shared/ui/IconActionButton";
 
-const Button = ({ width = "auto", height = "auto", onClick, icon }) => {
+const Button = ({
+    ariaLabel,
+    height = "auto",
+    icon,
+    isActive = false,
+    onClick,
+    title,
+    type = "button",
+    variant = "classic",
+    width = "auto",
+}) => {
     return (
-        <Styled.Box onClick={onClick} $width={width} $height={height}>
-            <Styled.Image src={icon} alt="icon" />
-        </Styled.Box>
+        <IconActionButton
+            ariaLabel={ariaLabel}
+            height={height}
+            icon={icon}
+            isActive={isActive}
+            onClick={onClick}
+            title={title}
+            type={type}
+            variant={variant}
+            width={width}
+        />
     );
 };
+
 export default Button;

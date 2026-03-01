@@ -47,6 +47,14 @@ const Quick = styled.div`
     }
 `;
 
-const Styled = { Header, Box, Logo, Menu, MenuItem, MenuLink, Quick };
+const Styled = {
+    Header,
+    Box,
+    Logo,
+    Menu,
+    MenuItem,
+    MenuLink,
+    Quick,
+};
 
 export default Styled;

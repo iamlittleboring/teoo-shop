@@ -1,38 +1,43 @@
-import { useState } from "react";
-import Styled from "./styled";
+import IconActionButton from "@shared/ui/IconActionButton";
+import cartIcon from "@shared/assets/images/cart.svg";
+import { createCartKey, useCart } from "@shared/lib";
 
-import cart from "@shared/assets/images/cart.svg";
+const CartButton = ({ product, selectedColor, selectedSize, styleVariant = "classic" }) => {
+    const { addItem, removeItem, isInCart } = useCart();
 
-const CartButton = ({ id }) => {
-    const [isInCart, setIsInCart] = useState(false);
-    const [isHover, setIsHover] = useState(false);
-
-    const handleOnMouseEnter = () => {
-        setIsHover(true);
+    const payload = {
+        productId: product.id,
+        size: selectedSize,
+        color: selectedColor,
     };
-    const handleOnMouseLeave = () => {
-        if (!isInCart) {
-            setIsHover(false);
-        }
-    };
+
+    const isAdded = isInCart(payload);
+
     const handleOnClick = () => {
-        setIsInCart(!isInCart);
+        if (isAdded) {
+            removeItem(createCartKey(payload));
+            return;
+        }
+
+        addItem({
+            ...payload,
+            image: product.image,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+        });
     };
 
     return (
-        <Styled.Box
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
+        <IconActionButton
+            icon={cartIcon}
             onClick={handleOnClick}
-            $dropShadow={!isHover && !isInCart}
-        >
-            <Styled.Icon src={cart} alt="cart icon" />
-            {(isHover || isInCart) && (
-                <Styled.ToCart>
-                    {(isInCart && "У кошику") || (isHover && "До кошика")}
-                </Styled.ToCart>
-            )}
-        </Styled.Box>
+            isActive={isAdded}
+            showActiveDot
+            variant={styleVariant}
+            ariaLabel={isAdded ? "Remove from cart" : "Add to cart"}
+            title={isAdded ? "Remove from cart" : "Add to cart"}
+        />
     );
 };
 

@@ -38,7 +38,7 @@ const ListButton = styled.button`
     position: absolute;
     cursor: pointer;
     translate: 0 -50%;
-    color: white;
+    color: ${({ theme }) => theme.ui.imageViewer.navButtonColor};
 
     &.left {
         top: 50%;

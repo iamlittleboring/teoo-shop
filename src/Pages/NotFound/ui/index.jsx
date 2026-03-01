@@ -1,4 +1,3 @@
-import { SubTitle, Title } from "@shared/styles";
 import Styled from "./styled";
 
 const NotFound = () => {

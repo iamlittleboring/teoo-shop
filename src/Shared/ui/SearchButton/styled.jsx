@@ -5,18 +5,26 @@ const Box = styled.div`
     justify-content: center;
     padding: 14px;
     max-height: 52px;
-    gap: 20px;
+    gap: 12px;
     align-items: center;
-    box-shadow: ${({ theme }) => theme.shadow};
-    background-color: transparent;
-    border-radius: 1000px;
-    border: 0;
-    transition: 0.3s all ease-in-out;
+    border-radius: 14px;
+    border: 1px solid
+        ${({ theme }) =>
+            theme.mode === "light"
+                ? theme.ui.iconButton.borderLight
+                : theme.ui.iconButton.borderDark};
+    background: ${({ theme }) =>
+        theme.mode === "light"
+            ? theme.ui.iconButton.bgLight
+            : theme.ui.iconButton.bgDark};
+    box-shadow: ${({ theme }) => theme.ui.iconButton.shadow};
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
 
     &:hover {
-        box-shadow: 0;
+        transform: translateY(-1px);
+        box-shadow: ${({ theme }) => theme.ui.iconButton.hoverShadow};
     }
 `;
 
@@ -27,8 +35,10 @@ const Input = styled.div`
 `;
 
 const Image = styled.img`
+    width: 22px;
+    height: 22px;
     filter: invert(
-        ${({ theme }) => (theme.colors.bg === "#fff" ? "0%" : "100%")}
+        ${({ theme }) => (theme.mode === "light" ? "0%" : "100%")}
     );
 `;
 

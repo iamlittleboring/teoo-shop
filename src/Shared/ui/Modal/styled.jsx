@@ -3,7 +3,7 @@ import styled from "styled-components";
 const Overlay = styled.div`
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: ${({ theme }) => theme.ui.modal.overlayBg};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,7 +11,8 @@ const Overlay = styled.div`
 `;
 
 const Container = styled.div`
-    background: white;
+    background: ${({ theme }) =>
+        theme.mode === "light" ? theme.ui.modal.bgLight : theme.ui.modal.bgDark};
     padding: 24px;
     border-radius: 8px;
     max-width: 500px;
@@ -24,9 +25,10 @@ const CloseButton = styled.button`
     top: 8px;
     right: 8px;
     font-size: 20px;
-    background: none;
-    border: none;
     cursor: pointer;
+    border: 1px solid ${({ theme }) => theme.ui.modal.closeBorder};
+    border-radius: 6px;
+    padding: 4px 8px;
 `;
 
 const Styled = { Overlay, Container, CloseButton };
