@@ -56,4 +56,3 @@ src/
 - Improved accessibility in buttons/modals (labels, dialog semantics, Esc close).
 - Reduced product image sizes for faster load.
 - Added unit tests for cart business logic.
-- Added GitHub Actions CI (`lint`, `test`, `build`).
