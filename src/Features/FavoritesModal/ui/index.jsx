@@ -1,42 +1,44 @@
-import { Link } from "react-router-dom";
-
 import { SubTitle, Text } from "@shared/styles";
 import { useFavorites } from "@shared/lib";
 import Modal from "@shared/ui/Modal";
+import ModalProductItem from "@shared/ui/ModalProductItem";
+import { useTranslation } from "react-i18next";
 
 import Styled from "./styled";
 
 const FavoritesModal = ({ isOpen, onClose }) => {
     const { clearFavorites, items, removeFavorite } = useFavorites();
+    const { t } = useTranslation();
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Favorites">
+        <Modal isOpen={isOpen} onClose={onClose} title={t("favorites.title")}>
             <Styled.Container>
-                <SubTitle $color="inherit">Favorites</SubTitle>
+                <SubTitle $color="inherit">{t("favorites.title")}</SubTitle>
 
-                {items.length === 0 && <Text>You have no favorites yet.</Text>}
+                {items.length === 0 && <Text>{t("favorites.empty")}</Text>}
 
                 {items.map((item) => (
-                    <Styled.Item key={item.id}>
-                        <Styled.Image src={item.image} alt={item.name} loading="lazy" />
-                        <Styled.Info>
-                            <Link to={`/product/${item.id}`} onClick={onClose}>
-                                <Styled.Name>{item.name}</Styled.Name>
-                            </Link>
-                            <Styled.Price>{item.price} грн</Styled.Price>
-                        </Styled.Info>
-                        <Styled.Remove
-                            type="button"
-                            onClick={() => removeFavorite(item.id)}
-                        >
-                            Remove
-                        </Styled.Remove>
-                    </Styled.Item>
+                    <ModalProductItem
+                        key={item.id}
+                        image={item.image}
+                        name={item.name}
+                        price={item.price}
+                        nameTo={`/product/${item.id}`}
+                        onNameClick={onClose}
+                        action={
+                            <Styled.Remove
+                                type="button"
+                                onClick={() => removeFavorite(item.id)}
+                            >
+                                {t("favorites.remove")}
+                            </Styled.Remove>
+                        }
+                    />
                 ))}
 
                 {items.length > 0 && (
                     <Styled.ClearButton type="button" onClick={clearFavorites}>
-                        Clear favorites
+                        {t("favorites.clear")}
                     </Styled.ClearButton>
                 )}
             </Styled.Container>

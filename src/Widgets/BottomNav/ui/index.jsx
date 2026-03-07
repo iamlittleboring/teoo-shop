@@ -1,5 +1,6 @@
 import Button from "@shared/ui/Button";
 import { useTheme } from "@shared/lib";
+import { useTranslation } from "react-i18next";
 
 import Styled from "./styled";
 
@@ -11,6 +12,7 @@ import burger from "@shared/assets/images/burger.svg";
 
 const BottomNav = () => {
     const { isDarkMode, toggleTheme } = useTheme();
+    const { t } = useTranslation();
 
     return (
         <Styled.BottomNav>
@@ -20,12 +22,22 @@ const BottomNav = () => {
                 width="52px"
                 height="52px"
                 isActive={isDarkMode}
-                ariaLabel="Toggle theme"
+                ariaLabel={t("header.actions.toggleTheme")}
             />
-            <Button icon={instagram} width="52px" height="52px" ariaLabel="Instagram" />
-            <Button icon={cart} width="52px" height="52px" ariaLabel="Cart" />
-            <Button icon={user} width="52px" height="52px" ariaLabel="Account" />
-            <Button icon={burger} width="52px" height="52px" ariaLabel="Menu" />
+            <Button
+                icon={instagram}
+                width="52px"
+                height="52px"
+                ariaLabel={t("common.instagram")}
+            />
+            <Button icon={cart} width="52px" height="52px" ariaLabel={t("cart.title")} />
+            <Button
+                icon={user}
+                width="52px"
+                height="52px"
+                ariaLabel={t("common.account")}
+            />
+            <Button icon={burger} width="52px" height="52px" ariaLabel={t("common.menu")} />
         </Styled.BottomNav>
     );
 };

@@ -1,3 +1,6 @@
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+
 import { ProductCard } from "@entities/ProductCard";
 import { Text, Title } from "@shared/styles";
 
@@ -5,26 +8,29 @@ import { useLoadProducts } from "../lib";
 
 import Styled from "./styled";
 
-const categoryConfig = {
-    tshirts: {
-        title: "T-Shirts",
-        subtitle: "Daily essentials",
-        variant: "classic",
-    },
-    hoodies: {
-        title: "Hoodies",
-        subtitle: "Street layer",
-        variant: "street",
-    },
-    accessories: {
-        title: "Accessories",
-        subtitle: "Final touch",
-        variant: "clean",
-    },
-};
-
 const Home = () => {
+    const { t } = useTranslation();
     const { data: products, isLoading, error } = useLoadProducts();
+    const categoryConfig = useMemo(
+        () => ({
+            tshirts: {
+                title: t("home.categories.tshirts.title"),
+                subtitle: t("home.categories.tshirts.subtitle"),
+                variant: "classic",
+            },
+            hoodies: {
+                title: t("home.categories.hoodies.title"),
+                subtitle: t("home.categories.hoodies.subtitle"),
+                variant: "street",
+            },
+            accessories: {
+                title: t("home.categories.accessories.title"),
+                subtitle: t("home.categories.accessories.subtitle"),
+                variant: "clean",
+            },
+        }),
+        [t]
+    );
 
     const groupedProducts = products.reduce((acc, product) => {
         if (!acc[product.category]) {
@@ -39,7 +45,7 @@ const Home = () => {
     if (isLoading) {
         return (
             <Styled.Shell>
-                <Text>Loading products...</Text>
+                <Text>{t("common.loadingProducts")}</Text>
             </Styled.Shell>
         );
     }

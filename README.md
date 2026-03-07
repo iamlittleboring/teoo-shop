@@ -43,16 +43,17 @@ src/
 
 ## What was improved
 
-- Replaced placeholder API flow with a real in-app product catalog API.
-- Added product details loading by route id.
-- Added grouped collections on Home (t-shirts, hoodies, accessories).
-- Implemented global cart state with `localStorage` persistence.
-- Added global favorites state with `localStorage` persistence.
-- Connected cart/favorites across product cards, product page, header and mobile bottom nav.
-- Reworked cart modal with editable quantity and total price.
-- Added favorites modal with quick remove/clear actions.
-- Unified icon actions (cart/like/header) through shared `IconActionButton`.
-- Moved core UI colors/gradients to central theme config (`theme.ui.*`).
-- Improved accessibility in buttons/modals (labels, dialog semantics, Esc close).
-- Reduced product image sizes for faster load.
-- Added unit tests for cart business logic.
+- Added i18n with `i18next`/`react-i18next` (UA/EN), including language switch in footer flags and localized UI labels.
+- Added a dedicated Search page with query param support (`/search?q=`), sorting, category filters, and price range filters.
+- Refactored cart/favorites modal items into shared UI building blocks and improved cart item controls.
+- Reorganized config: theme tokens moved to `Shared/config/styles.js`, with clean package-style exports from `Shared/config/index.js`.
+- Improved dev architecture for Fast Refresh by separating component modules (`.jsx`) from non-React modules (`.js`).
+- Updated header Instagram action to open the official page: [https://www.instagram.com/teoo.shop](https://www.instagram.com/teoo.shop).
+- Polished active icon button borders for cleaner visual states.
+
+## TODO
+
+- Build full checkout flow with stepper (Cart -> Contacts -> Delivery -> Payment -> Confirm).
+- Add auth flow (email/social) and profile modal integration.
+- Move i18n resources to split JSON namespaces for easier scaling.
+- Add e2e tests for cart, favorites, search filters, and checkout happy path.

@@ -1,17 +1,6 @@
 import styled from "styled-components";
 
-import {
-    DangerLinkButton,
-    Info,
-    Meta,
-    Name,
-    PanelCard,
-    Price,
-    Thumb,
-} from "@shared/styles/panel-list";
-
-const Container = styled(PanelCard)``;
-const Image = styled(Thumb)``;
+import { Meta } from "@shared/styles/panel-list";
 
 const Details = styled.div`
     display: flex;
@@ -35,47 +24,54 @@ const Dot = styled.span`
     background-color: ${({ $color }) => $color || "transparent"};
 `;
 
-const Counter = styled.div`
+const Actions = styled.div`
     display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    flex-direction: column;
+    gap: 8px;
 `;
 
-const CounterButton = styled.button`
+const ActionButton = styled.button`
     width: 28px;
     height: 28px;
     border-radius: 6px;
     border: 1px solid ${({ theme }) => theme.ui.cartItem.counterBorder};
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+
+    &:hover {
+        opacity: 0.85;
+    }
 
     &:disabled {
-        opacity: 0.45;
+        opacity: 0.4;
         cursor: not-allowed;
     }
 `;
 
-const CounterValue = styled.span`
-    min-width: 22px;
+const CountValue = styled.span`
+    min-width: 28px;
     text-align: center;
     font-weight: 700;
 `;
 
-const RemoveButton = styled(DangerLinkButton)``;
+const TrashIcon = styled.img`
+    width: 16px;
+    height: 16px;
+    filter: invert(${({ theme }) => (theme.mode === "light" ? "0%" : "100%")});
+`;
 
 const Styled = {
-    Container,
-    Image,
-    Name,
-    Info,
     Details,
-    Color,
     Size,
+    Color,
     Dot,
-    Price,
-    Counter,
-    CounterButton,
-    CounterValue,
-    RemoveButton,
+    Actions,
+    ActionButton,
+    CountValue,
+    TrashIcon,
 };
 
 export default Styled;

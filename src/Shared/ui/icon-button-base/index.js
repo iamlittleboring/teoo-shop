@@ -4,6 +4,8 @@ const getAccent = (theme, variant) =>
     theme.ui.accents[variant] || theme.ui.accents.classic;
 
 const IconButtonBase = styled.button`
+    appearance: none;
+    outline: none;
     width: ${({ $size = "52px" }) => $size};
     height: ${({ $size = "52px" }) => $size};
     display: inline-flex;
@@ -12,7 +14,13 @@ const IconButtonBase = styled.button`
     border-radius: 14px;
     cursor: pointer;
     border: 1px solid
-        ${({ theme }) => {
+        ${({ theme, $active }) => {
+            if ($active) {
+                return theme.mode === "light"
+                    ? "rgba(0, 0, 0, 0.08)"
+                    : "rgba(255, 255, 255, 0.26)";
+            }
+
             return theme.mode === "light"
                 ? theme.ui.iconButton.borderLight
                 : theme.ui.iconButton.borderDark;
@@ -34,6 +42,7 @@ const IconButtonBase = styled.button`
         $active ? theme.ui.iconButton.activeShadow : theme.ui.iconButton.shadow};
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
+    background-clip: padding-box;
 
     &:hover {
         transform: translateY(-1px);

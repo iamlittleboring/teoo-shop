@@ -1,8 +1,8 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { darkTheme, lightTheme } from "@shared/config";
 
-const ThemeContext = createContext(null);
+import { ThemeContext } from "./theme-context";
 
 const ThemeContextProvider = ({ children }) => {
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -23,14 +23,4 @@ const ThemeContextProvider = ({ children }) => {
     );
 };
 
-const useTheme = () => {
-    const context = useContext(ThemeContext);
-
-    if (!context) {
-        throw new Error("useTheme must be used within ThemeContextProvider");
-    }
-
-    return context;
-};
-
-export { ThemeContextProvider, useTheme };
+export { ThemeContextProvider };

@@ -1,9 +1,5 @@
-import {
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-} from "react";
+import { useEffect, useState } from "react";
+
 import {
     addCartItem,
     createCartKey,
@@ -11,8 +7,7 @@ import {
     removeCartItem,
     updateCartItemQuantity,
 } from "./cart-helpers";
-
-const CartContext = createContext(null);
+import { CartContext } from "./cart-context";
 
 const CART_STORAGE_KEY = "teoo-shop-cart";
 
@@ -75,14 +70,4 @@ const CartProvider = ({ children }) => {
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
-const useCart = () => {
-    const context = useContext(CartContext);
-
-    if (!context) {
-        throw new Error("useCart must be used within CartProvider");
-    }
-
-    return context;
-};
-
-export { CartProvider, createCartKey, useCart };
+export { CartProvider };

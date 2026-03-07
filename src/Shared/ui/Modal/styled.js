@@ -17,7 +17,10 @@ const Container = styled.div`
     border-radius: 8px;
     max-width: 500px;
     width: 100%;
+    min-height: 500px;
     position: relative;
+    display: flex;
+    flex-direction: column;
 `;
 
 const CloseButton = styled.button`

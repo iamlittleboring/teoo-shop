@@ -1,9 +1,11 @@
 import IconActionButton from "@shared/ui/IconActionButton";
 import cartIcon from "@shared/assets/images/cart.svg";
 import { createCartKey, useCart } from "@shared/lib";
+import { useTranslation } from "react-i18next";
 
 const CartButton = ({ product, selectedColor, selectedSize, styleVariant = "classic" }) => {
     const { addItem, removeItem, isInCart } = useCart();
+    const { t } = useTranslation();
 
     const payload = {
         productId: product.id,
@@ -33,10 +35,9 @@ const CartButton = ({ product, selectedColor, selectedSize, styleVariant = "clas
             icon={cartIcon}
             onClick={handleOnClick}
             isActive={isAdded}
-            showActiveDot
             variant={styleVariant}
-            ariaLabel={isAdded ? "Remove from cart" : "Add to cart"}
-            title={isAdded ? "Remove from cart" : "Add to cart"}
+            ariaLabel={isAdded ? t("cart.removeItem") : t("cart.addItem")}
+            title={isAdded ? t("cart.removeItem") : t("cart.addItem")}
         />
     );
 };

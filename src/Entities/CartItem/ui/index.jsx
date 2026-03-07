@@ -1,3 +1,7 @@
+import ModalProductItem from "@shared/ui/ModalProductItem";
+import trashIcon from "@shared/assets/images/trash.svg";
+import { useTranslation } from "react-i18next";
+
 import Styled from "./styled";
 
 const CartItem = ({
@@ -10,47 +14,54 @@ const CartItem = ({
     setCount,
     size,
 }) => {
+    const { t } = useTranslation();
+
     return (
-        <Styled.Container>
-            <Styled.Image src={image} alt={name} loading="lazy" />
-            <Styled.Info>
-                <Styled.Name>{name}</Styled.Name>
+        <ModalProductItem
+            image={image}
+            name={name}
+            price={price}
+            details={
                 <Styled.Details>
-                    {size && <Styled.Size>Size: {size}</Styled.Size>}
+                    {size && <Styled.Size>{t("cart.size", { size })}</Styled.Size>}
                     {color && (
                         <Styled.Color>
-                            Color: <Styled.Dot $color={color} />
+                            {t("cart.color")} <Styled.Dot $color={color} />
                         </Styled.Color>
                     )}
                 </Styled.Details>
-                <Styled.Price>{price} грн</Styled.Price>
-                <Styled.Counter>
-                    <Styled.CounterButton
+            }
+            action={
+                <Styled.Actions>
+                    <Styled.ActionButton
                         type="button"
-                        onClick={() => setCount(count - 1)}
-                        disabled={count <= 1}
-                        aria-label="Decrease quantity"
-                    >
-                        -
-                    </Styled.CounterButton>
-                    <Styled.CounterValue>{count}</Styled.CounterValue>
-                    <Styled.CounterButton
-                        type="button"
-                        onClick={() => setCount(count + 1)}
-                        aria-label="Increase quantity"
+                        onClick={() => setCount(Math.min(10, count + 1))}
+                        disabled={count >= 10}
+                        aria-label={t("cart.increase")}
                     >
                         +
-                    </Styled.CounterButton>
-                </Styled.Counter>
-            </Styled.Info>
-            <Styled.RemoveButton
-                type="button"
-                onClick={onRemove}
-                aria-label="Remove item"
-            >
-                Remove
-            </Styled.RemoveButton>
-        </Styled.Container>
+                    </Styled.ActionButton>
+                    <Styled.CountValue>{count}</Styled.CountValue>
+                    {count === 1 ? (
+                        <Styled.ActionButton
+                            type="button"
+                            onClick={onRemove}
+                            aria-label={t("cart.removeItem")}
+                        >
+                            <Styled.TrashIcon src={trashIcon} alt="" aria-hidden="true" />
+                        </Styled.ActionButton>
+                    ) : (
+                        <Styled.ActionButton
+                            type="button"
+                            onClick={() => setCount(count - 1)}
+                            aria-label={t("cart.decrease")}
+                        >
+                            -
+                        </Styled.ActionButton>
+                    )}
+                </Styled.Actions>
+            }
+        />
     );
 };
 

@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-const FavoritesContext = createContext(null);
+import { FavoritesContext } from "./favorites-context";
 
 const FAVORITES_STORAGE_KEY = "teoo-shop-favorites";
 
@@ -70,14 +70,4 @@ const FavoritesProvider = ({ children }) => {
     );
 };
 
-const useFavorites = () => {
-    const context = useContext(FavoritesContext);
-
-    if (!context) {
-        throw new Error("useFavorites must be used within FavoritesProvider");
-    }
-
-    return context;
-};
-
-export { FavoritesProvider, useFavorites };
+export { FavoritesProvider };

@@ -12,20 +12,9 @@ const Icon = styled(IconBase)`
     height: ${({ $iconSize }) => $iconSize || "22px"};
 `;
 
-const ActiveDot = styled.span`
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 7px;
-    height: 7px;
-    border-radius: 999px;
-    background-color: ${({ theme }) => theme.ui.iconButton.activeDot};
-`;
-
 const Styled = {
     Box,
     Icon,
-    ActiveDot,
 };
 
 export default Styled;

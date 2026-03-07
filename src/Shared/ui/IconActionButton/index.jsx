@@ -1,22 +1,31 @@
 import Styled from "./styled";
 
 const IconActionButton = ({
+    as,
     ariaLabel,
     height,
+    href,
     icon,
     iconSize,
     isActive = false,
     onClick,
-    showActiveDot = false,
+    rel,
     size,
+    target,
     title,
     type = "button",
     variant = "classic",
     width,
 }) => {
+    const isLink = as === "a";
+
     return (
         <Styled.Box
-            type={type}
+            as={as}
+            type={isLink ? undefined : type}
+            href={isLink ? href : undefined}
+            target={isLink ? target : undefined}
+            rel={isLink ? rel : undefined}
             onClick={onClick}
             $active={isActive}
             $variant={variant}
@@ -33,7 +42,6 @@ const IconActionButton = ({
                 $active={isActive}
                 $iconSize={iconSize}
             />
-            {showActiveDot && isActive && <Styled.ActiveDot aria-hidden="true" />}
         </Styled.Box>
     );
 };

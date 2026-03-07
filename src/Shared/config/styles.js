@@ -13,7 +13,6 @@ const baseUiTokens = {
         shadow: "0 8px 18px rgba(0, 0, 0, 0.08)",
         activeShadow: "0 10px 18px rgba(0, 0, 0, 0.24)",
         hoverShadow: "0 12px 22px rgba(0, 0, 0, 0.16)",
-        activeDot: "#fff",
     },
     productCard: {
         borderLight: "rgba(0, 0, 0, 0.08)",

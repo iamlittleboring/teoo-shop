@@ -1,18 +1,20 @@
-import CartItem from "@entities/CartItem/ui";
+import { CartItem } from "@entities/CartItem";
 import { SubTitle, Text } from "@shared/styles";
 import Modal from "@shared/ui/Modal";
 import { useCart } from "@shared/lib";
+import { useTranslation } from "react-i18next";
 
 import Styled from "./styled";
 
 const CartModal = ({ isOpen, onClose }) => {
     const { clearCart, items, removeItem, setItemQuantity, totalPrice } = useCart();
+    const { t } = useTranslation();
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Your cart">
+        <Modal isOpen={isOpen} onClose={onClose} title={t("cart.title")}>
             <Styled.Container>
-                <SubTitle $color="inherit">Cart</SubTitle>
-                {items.length === 0 && <Text>Your cart is empty.</Text>}
+                <SubTitle $color="inherit">{t("cart.title")}</SubTitle>
+                {items.length === 0 && <Text>{t("cart.empty")}</Text>}
                 {items.map((item) => (
                     <CartItem
                         key={item.key}
@@ -28,9 +30,9 @@ const CartModal = ({ isOpen, onClose }) => {
                 ))}
                 {items.length > 0 && (
                     <Styled.Footer>
-                        <Styled.Total>Total: {totalPrice} грн</Styled.Total>
+                        <Styled.Total>{t("cart.total", { total: totalPrice })}</Styled.Total>
                         <Styled.ClearButton type="button" onClick={clearCart}>
-                            Clear cart
+                            {t("cart.clear")}
                         </Styled.ClearButton>
                     </Styled.Footer>
                 )}

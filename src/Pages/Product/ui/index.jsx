@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { getProductById } from "@entities/ProductCard/api";
@@ -11,6 +12,7 @@ import { ImageViewer } from "@widgets/ImageViewer";
 import Styled from "./styled";
 
 const Product = () => {
+    const { t } = useTranslation();
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +34,7 @@ const Product = () => {
             }
 
             if (!response) {
-                setError("Product not found");
+                setError(t("product.notFound"));
                 setProduct(null);
                 setIsLoading(false);
                 return;
@@ -46,7 +48,7 @@ const Product = () => {
 
         loadProduct().catch(() => {
             if (isMounted) {
-                setError("Failed to load product");
+                setError(t("product.failedLoad"));
                 setIsLoading(false);
             }
         });
@@ -54,7 +56,7 @@ const Product = () => {
         return () => {
             isMounted = false;
         };
-    }, [id]);
+    }, [id, t]);
 
     const sizeOptions = useMemo(
         () =>
@@ -77,7 +79,7 @@ const Product = () => {
     if (isLoading) {
         return (
             <Container>
-                <Text>Loading product...</Text>
+                <Text>{t("common.loadingProduct")}</Text>
             </Container>
         );
     }
@@ -85,7 +87,7 @@ const Product = () => {
     if (error || !product) {
         return (
             <Container>
-                <Text>{error || "Product not found"}</Text>
+                <Text>{error || t("product.notFound")}</Text>
             </Container>
         );
     }

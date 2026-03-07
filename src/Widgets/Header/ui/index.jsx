@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { CartModal } from "@features/CartModal";
 import { FavoritesModal } from "@features/FavoritesModal";
@@ -20,6 +21,7 @@ import Styled from "./styled";
 
 const Header = () => {
     const { isDarkMode, toggleTheme } = useTheme();
+    const { t } = useTranslation();
 
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
@@ -28,22 +30,23 @@ const Header = () => {
     const toggleFavorites = () => setIsFavoritesOpen((prev) => !prev);
 
     return (
-        <Styled.Header id="site-header">
+        <Styled.Header>
             <Container>
                 <Styled.Box>
                     <Styled.Logo src={logo} alt="logo" />
                     <Styled.Menu>
                         <Styled.MenuItem>
-                            <Styled.MenuLink to="/">new</Styled.MenuLink>
+                            <Styled.MenuLink to="/">{t("header.menu.new")}</Styled.MenuLink>
                         </Styled.MenuItem>
                         <Styled.MenuItem>
-                            <Styled.MenuLink to="/t-shorts">t-shorts</Styled.MenuLink>
+                            <Styled.MenuLink to="/t-shorts">
+                                {t("header.menu.tshirts")}
+                            </Styled.MenuLink>
                         </Styled.MenuItem>
                         <Styled.MenuItem>
-                            <Styled.MenuLink to="/hoodies">hoodies</Styled.MenuLink>
-                        </Styled.MenuItem>
-                        <Styled.MenuItem>
-                            <Styled.MenuLink to="/stuff">stuff</Styled.MenuLink>
+                            <Styled.MenuLink to="/hoodies">
+                                {t("header.menu.hoodies")}
+                            </Styled.MenuLink>
                         </Styled.MenuItem>
                     </Styled.Menu>
                     <Styled.Quick>
@@ -53,28 +56,32 @@ const Header = () => {
                             width="52px"
                             height="52px"
                             isActive={isDarkMode}
-                            ariaLabel="Toggle theme"
+                            ariaLabel={t("header.actions.toggleTheme")}
                         />
 
                         <Button
+                            as="a"
+                            href="https://www.instagram.com/teoo.shop"
+                            target="_blank"
+                            rel="noreferrer noopener"
                             icon={instagram}
                             width="52px"
                             height="52px"
-                            ariaLabel="Instagram"
+                            ariaLabel={t("header.actions.instagram")}
                         />
 
                         <IconActionButton
                             icon={heart}
                             size="52px"
                             onClick={toggleFavorites}
-                            ariaLabel="Open favorites"
+                            ariaLabel={t("header.actions.openFavorites")}
                         />
 
                         <IconActionButton
                             icon={cart}
                             size="52px"
                             onClick={toggleCart}
-                            ariaLabel="Open cart"
+                            ariaLabel={t("header.actions.openCart")}
                         />
                         <CartModal isOpen={isCartOpen} onClose={toggleCart} />
                         <FavoritesModal
@@ -85,7 +92,7 @@ const Header = () => {
                             icon={user}
                             width="52px"
                             height="52px"
-                            ariaLabel="Account"
+                            ariaLabel={t("header.actions.account")}
                         />
                         <SearchButton icon={search} />
                     </Styled.Quick>

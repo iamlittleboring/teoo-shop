@@ -22,6 +22,13 @@ const Box = styled.div`
     position: relative;
     overflow: hidden;
 
+    button {
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+        display: inline-flex;
+    }
+
     &:hover {
         transform: translateY(-1px);
         box-shadow: ${({ theme }) => theme.ui.iconButton.hoverShadow};
