@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { CartButton } from "@features/CartButton";
 import { FavoriteButton } from "@features/FavoriteButton";
@@ -12,6 +13,7 @@ const variantLabel = {
 };
 
 const ProductCard = ({ product, variant = "classic" }) => {
+    const { t } = useTranslation();
     const { description, id, image, name, price } = product;
 
     const buttonPayload = {
@@ -47,7 +49,10 @@ const ProductCard = ({ product, variant = "classic" }) => {
                 <Styled.Buy>
                     <Styled.Prices>
                         <Styled.PriceLabel>Price</Styled.PriceLabel>
-                        <Styled.Price>{price} грн</Styled.Price>
+                        <Styled.Price>
+                            {price}{" "}
+                            <Styled.Currency>{t("common.currency")}</Styled.Currency>
+                        </Styled.Price>
                     </Styled.Prices>
                     <Styled.Actions>
                         <FavoriteButton product={buttonPayload} />

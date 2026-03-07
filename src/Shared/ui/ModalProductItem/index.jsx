@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import Styled from "./styled";
 
@@ -12,6 +13,8 @@ const ModalProductItem = ({
     bottomContent,
     action,
 }) => {
+    const { t } = useTranslation();
+
     return (
         <Styled.Container>
             <Styled.Image src={image} alt={name} loading="lazy" />
@@ -24,7 +27,9 @@ const ModalProductItem = ({
                     <Styled.Name>{name}</Styled.Name>
                 )}
                 {details}
-                <Styled.Price>{price} грн</Styled.Price>
+                <Styled.Price>
+                    {price} <Styled.Currency>{t("common.currency")}</Styled.Currency>
+                </Styled.Price>
                 {bottomContent}
             </Styled.Info>
             {action ? <Styled.Action>{action}</Styled.Action> : null}

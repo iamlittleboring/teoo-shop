@@ -17,24 +17,28 @@ const FavoritesModal = ({ isOpen, onClose }) => {
 
                 {items.length === 0 && <Text>{t("favorites.empty")}</Text>}
 
-                {items.map((item) => (
-                    <ModalProductItem
-                        key={item.id}
-                        image={item.image}
-                        name={item.name}
-                        price={item.price}
-                        nameTo={`/product/${item.id}`}
-                        onNameClick={onClose}
-                        action={
-                            <Styled.Remove
-                                type="button"
-                                onClick={() => removeFavorite(item.id)}
-                            >
-                                {t("favorites.remove")}
-                            </Styled.Remove>
-                        }
-                    />
-                ))}
+                {items.length > 0 && (
+                    <Styled.Items>
+                        {items.map((item) => (
+                            <ModalProductItem
+                                key={item.id}
+                                image={item.image}
+                                name={item.name}
+                                price={item.price}
+                                nameTo={`/product/${item.id}`}
+                                onNameClick={onClose}
+                                action={
+                                    <Styled.Remove
+                                        type="button"
+                                        onClick={() => removeFavorite(item.id)}
+                                    >
+                                        {t("favorites.remove")}
+                                    </Styled.Remove>
+                                }
+                            />
+                        ))}
+                    </Styled.Items>
+                )}
 
                 {items.length > 0 && (
                     <Styled.ClearButton type="button" onClick={clearFavorites}>

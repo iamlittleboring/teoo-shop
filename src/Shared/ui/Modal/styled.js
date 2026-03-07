@@ -18,9 +18,11 @@ const Container = styled.div`
     max-width: 500px;
     width: 100%;
     min-height: 500px;
+    max-height: 600px;
     position: relative;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 `;
 
 const CloseButton = styled.button`

@@ -29,6 +29,10 @@ const BuyItems = styled.div`
     gap: 20px;
 `;
 
-const Styled = { Box, Data, Title, Desc, BuyItems };
+const Currency = styled.span`
+    text-transform: uppercase;
+`;
+
+const Styled = { Box, Data, Title, Desc, BuyItems, Currency };
 
 export default Styled;

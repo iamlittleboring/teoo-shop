@@ -158,6 +158,10 @@ const Price = styled.p`
     line-height: 1;
 `;
 
+const Currency = styled.span`
+    text-transform: uppercase;
+`;
+
 const Styled = {
     Box,
     ImageLink,
@@ -175,6 +179,7 @@ const Styled = {
     Prices,
     PriceLabel,
     Price,
+    Currency,
 };
 
 export default Styled;

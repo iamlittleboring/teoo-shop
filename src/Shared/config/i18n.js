@@ -25,6 +25,7 @@ const resources = {
                 loadingProduct: "Завантаження товару...",
                 loadingSearch: "Завантаження пошуку...",
                 search: "Пошук",
+                currency: "грн",
                 instagram: "Instagram",
                 account: "Акаунт",
                 menu: "Меню",
@@ -51,7 +52,7 @@ const resources = {
             cart: {
                 title: "Кошик",
                 empty: "Кошик порожній.",
-                total: "Разом: {{total}} грн",
+                total: "Разом:",
                 clear: "Очистити кошик",
                 removeItem: "Видалити товар",
                 addItem: "Додати в кошик",
@@ -125,6 +126,7 @@ const resources = {
                 loadingProduct: "Loading product...",
                 loadingSearch: "Loading search...",
                 search: "Search",
+                currency: "uah",
                 instagram: "Instagram",
                 account: "Account",
                 menu: "Menu",
@@ -151,7 +153,7 @@ const resources = {
             cart: {
                 title: "Cart",
                 empty: "Your cart is empty.",
-                total: "Total: {{total}} грн",
+                total: "Total:",
                 clear: "Clear cart",
                 removeItem: "Remove item",
                 addItem: "Add to cart",

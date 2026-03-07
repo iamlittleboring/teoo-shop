@@ -105,7 +105,10 @@ const Product = () => {
                         <ImageViewer images={product.images} title={product.name} />
                         <Styled.Data>
                             <Styled.Title>{product.name}</Styled.Title>
-                            <Text>{product.price} грн</Text>
+                            <Text>
+                                {product.price}{" "}
+                                <Styled.Currency>{t("common.currency")}</Styled.Currency>
+                            </Text>
                             <Styled.Desc>{product.description}</Styled.Desc>
                             <Styled.BuyItems>
                                 <SizePicker
