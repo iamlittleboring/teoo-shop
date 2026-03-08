@@ -28,7 +28,7 @@ Project-specific note:
 Install dependencies and start the development server.
 
 ```sh
-git clone https://github.com/your-username/teoo-shop.git
+git clone https://github.com/iamlittleboring/teoo-shop.git
 cd teoo-shop
 npm i
 npm run dev
