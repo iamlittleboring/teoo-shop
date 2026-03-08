@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { fetchProducts } from "../api";
+import { getProducts } from "@entities/ProductCard/api";
 
-const useLoadProducts = () => {
+const useProductsList = () => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -10,12 +10,12 @@ const useLoadProducts = () => {
     useEffect(() => {
         let isMounted = true;
 
-        const fetchData = async () => {
+        const loadProducts = async () => {
             setIsLoading(true);
             setError(null);
 
             try {
-                const response = await fetchProducts();
+                const response = await getProducts();
 
                 if (isMounted) {
                     setData(response);
@@ -31,7 +31,7 @@ const useLoadProducts = () => {
             }
         };
 
-        fetchData();
+        loadProducts();
 
         return () => {
             isMounted = false;
@@ -41,4 +41,4 @@ const useLoadProducts = () => {
     return { data, error, isLoading };
 };
 
-export { useLoadProducts };
+export { useProductsList };

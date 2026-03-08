@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { getProductById } from "@entities/ProductCard/api";
 import { BreadCrumbs } from "@features/BreadCrumbs";
+import { buildProductBreadcrumbItems } from "@features/BreadCrumbs/lib/build-items";
 import { CartButton } from "@features/CartButton";
 import { ColorPicker, SizePicker } from "@features/Picker";
 import { Container, Text } from "@shared/styles";
@@ -78,25 +79,37 @@ const Product = () => {
 
     if (isLoading) {
         return (
-            <Container>
-                <Text>{t("common.loadingProduct")}</Text>
-            </Container>
+            <section>
+                <Container>
+                    <Text>{t("common.loadingProduct")}</Text>
+                </Container>
+            </section>
         );
     }
 
     if (error || !product) {
         return (
-            <Container>
-                <Text>{error || t("product.notFound")}</Text>
-            </Container>
+            <section>
+                <Container>
+                    <Text>{error || t("product.notFound")}</Text>
+                </Container>
+            </section>
         );
     }
+
+    const breadcrumbs = buildProductBreadcrumbItems({
+        collectionName: product.collection?.name || "Collection",
+        collectionSlug: product.collection?.slug,
+        productName: product.name,
+        productTypeLabel: t(`productTypes.${product.type}`),
+        productTypeValue: product.type,
+    });
 
     return (
         <>
             <section>
                 <Container>
-                    <BreadCrumbs />
+                    <BreadCrumbs items={breadcrumbs} />
                 </Container>
             </section>
             <section>

@@ -116,6 +116,14 @@ const resources = {
                 notFound: "Товар не знайдено",
                 failedLoad: "Не вдалося завантажити товар",
             },
+            productTypes: {
+                tshirt: "футболка",
+                hoodie: "худі",
+                accessory: "аксесуар",
+            },
+            collection: {
+                notFound: "Колекцію не знайдено",
+            },
         },
     },
     en: {
@@ -216,6 +224,14 @@ const resources = {
             product: {
                 notFound: "Product not found",
                 failedLoad: "Failed to load product",
+            },
+            productTypes: {
+                tshirt: "t-shirt",
+                hoodie: "hoodie",
+                accessory: "accessory",
+            },
+            collection: {
+                notFound: "Collection not found",
             },
         },
     },

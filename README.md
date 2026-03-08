@@ -1,23 +1,40 @@
-# Teoo Shop
+# Teoo shop
 
-Teoo Shop is a React + Vite storefront built with Feature-Sliced Design ideas.
+Welcome to **Teoo Shop**, an online store built using modern front-end technologies and following the Feature-Sliced Design (FSD) architecture. This project aims to provide a scalable and maintainable e-commerce solution with React as the core framework.
 
-## Stack
+## 🌟 Features
+- **Modern UI**: Responsive and user-friendly design for seamless shopping experiences.
+- **Feature-Sliced Design**: Clean project structure for better scalability and maintainability.
+- **State Management**: Utilizes popular state management libraries for predictable application behavior.
+- **Dynamic Routing**: Efficient navigation using React Router.
 
-- React 18
-- React Router
-- Styled Components
-- Vite
-- ESLint
+## 🏗️ Project Structure (FSD)
+```
+src/
+├── App/                # Composition root: app bootstrap, router, layout, app-level theme wiring
+├── Pages/              # Route-level screens (Home, Search, Product, Collection, NotFound)
+├── Widgets/            # Large page blocks (Header, Footer, BottomNav, ImageViewer)
+├── Features/           # User actions/use-cases (cart modal, favorites modal, filters, breadcrumbs)
+├── Entities/           # Business entities and their UI/data (ProductCard, CartItem)
+└── Shared/             # Shared ui/config/styles/lib/assets used across all layers
+```
 
-## Run locally
+Project-specific note:
+- Context providers and shared state hooks are located in `src/Shared/lib` (`CartProvider`, `FavoritesProvider`, `ThemeContextProvider`, hooks).
+- `src/App` does not own all providers; it composes providers from `Shared/lib`, applies `AppThemeProvider`, and mounts the router.
+
+## 💻 Installation
+
+Install dependencies and start the development server.
 
 ```sh
+git clone https://github.com/your-username/teoo-shop.git
+cd teoo-shop
 npm i
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+Open your browser and navigate to [http://localhost:5173](http://localhost:5173).
 
 ## Commands
 
@@ -27,18 +44,6 @@ npm run lint     # static checks
 npm test         # unit tests (node:test)
 npm run build    # production build
 npm run preview  # preview production build
-```
-
-## Current project structure
-
-```text
-src/
-├── App/
-├── Pages/
-├── Widgets/
-├── Features/
-├── Entities/
-└── Shared/
 ```
 
 ## What was improved

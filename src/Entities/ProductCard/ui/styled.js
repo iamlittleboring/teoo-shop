@@ -59,7 +59,7 @@ const Image = styled.img`
     }
 `;
 
-const Badge = styled.span`
+const BadgeLink = styled(Link)`
     position: absolute;
     top: 12px;
     left: 12px;
@@ -71,6 +71,10 @@ const Badge = styled.span`
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+
+    &:hover {
+        opacity: 0.9;
+    }
 `;
 
 const Data = styled.div`
@@ -100,6 +104,18 @@ const Tag = styled.span`
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: ${({ theme, $variant }) => getAccent(theme, $variant)};
+`;
+
+const TagLink = styled(Link)`
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: ${({ theme, $variant }) => getAccent(theme, $variant)};
+
+    &:hover {
+        opacity: 0.85;
+    }
 `;
 
 const Name = styled.h2`
@@ -167,11 +183,12 @@ const Styled = {
     ImageLink,
     ImageWrap,
     Image,
-    Badge,
+    BadgeLink,
     Data,
     Top,
     Code,
     Tag,
+    TagLink,
     Name,
     Desc,
     Buy,

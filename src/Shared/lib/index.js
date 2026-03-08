@@ -5,3 +5,4 @@ export { FavoritesProvider } from "./favorites-provider";
 export { useFavorites } from "./use-favorites";
 export { ThemeContextProvider } from "./theme-provider";
 export { useTheme } from "./use-theme";
+export { useProductsList } from "./use-products-list";

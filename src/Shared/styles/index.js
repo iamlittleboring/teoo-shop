@@ -22,26 +22,6 @@ const Flex = styled.div`
     gap: 10px;
 `;
 
-const Title = styled.h1`
-    font-weight: 800;
-    font-size: 52px;
-    color: ${({ $color, theme }) => $color || theme.colors.text};
-    position: relative;
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    white-space: nowrap;
-
-    &::after {
-        content: "";
-        display: block;
-        width: 100%;
-        height: 3px;
-        background-color: ${({ theme }) => theme.colors.text};
-        position: static;
-    }
-`;
-
 const SubTitle = styled.h2`
     font-weight: 800;
     font-size: 28px;
@@ -129,7 +109,6 @@ export {
     Main,
     Container,
     Flex,
-    Title,
     SubTitle,
     Text,
     Input,

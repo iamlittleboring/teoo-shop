@@ -1,54 +1,83 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
-import { getProducts } from "@entities/ProductCard/api";
 import { ProductCard } from "@entities/ProductCard";
-import { Text, Title } from "@shared/styles";
+import { BreadCrumbs } from "@features/BreadCrumbs";
+import { buildSearchBreadcrumbItems } from "@features/BreadCrumbs/lib/build-items";
+import {
+    buildCategoryFilterMap,
+    buildNextCategoriesValue,
+    buildNextSearchParams,
+    parseSearchQueryState,
+} from "@features/SearchFilters/model/query-state";
+import { SearchFilters } from "@features/SearchFilters";
+import { useProductsList } from "@shared/lib";
+import { Container, Text } from "@shared/styles";
+import SectionTitle from "@shared/ui/SectionTitle";
 
 import Styled from "./styled";
 
 const SearchPage = () => {
     const { t } = useTranslation();
-    const [searchParams] = useSearchParams();
-    const query = (searchParams.get("q") || "").trim().toLowerCase();
-    const categoryLabels = {
-        tshirts: t("searchPage.categories.tshirts"),
-        hoodies: t("searchPage.categories.hoodies"),
-        accessories: t("searchPage.categories.accessories"),
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { data: products, isLoading, error } = useProductsList();
+
+    const queryState = useMemo(
+        () => parseSearchQueryState(searchParams),
+        [searchParams]
+    );
+
+    const { maxPrice, minPrice, query, rawQuery, selectedCategories, sort } =
+        queryState;
+
+    const categoryFilter = useMemo(
+        () => buildCategoryFilterMap(selectedCategories),
+        [selectedCategories]
+    );
+
+    const categoryLabels = useMemo(
+        () => ({
+            tshirts: t("searchPage.categories.tshirts"),
+            hoodies: t("searchPage.categories.hoodies"),
+            accessories: t("searchPage.categories.accessories"),
+        }),
+        [t]
+    );
+
+    const applyParamsPatch = (patch) => {
+        const next = buildNextSearchParams(searchParams, patch);
+        setSearchParams(next);
     };
 
-    const [products, setProducts] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const handleSortChange = (event) => {
+        const nextSort = event.target.value === "relevance" ? null : event.target.value;
+        applyParamsPatch({ sort: nextSort });
+    };
 
-    const [sort, setSort] = useState("relevance");
-    const [categoryFilter, setCategoryFilter] = useState({
-        tshirts: true,
-        hoodies: true,
-        accessories: true,
-    });
-    const [minPrice, setMinPrice] = useState("");
-    const [maxPrice, setMaxPrice] = useState("");
+    const handleCategoryChange = (event) => {
+        const categoryKey = event.target.name;
+        const isChecked = event.target.checked;
+        const categoryValue = buildNextCategoriesValue(
+            selectedCategories,
+            categoryKey,
+            isChecked
+        );
 
-    useEffect(() => {
-        let isMounted = true;
+        applyParamsPatch({ category: categoryValue });
+    };
 
-        getProducts()
-            .then((response) => {
-                if (isMounted) {
-                    setProducts(response);
-                }
-            })
-            .finally(() => {
-                if (isMounted) {
-                    setIsLoading(false);
-                }
-            });
+    const handleMinPriceChange = (event) => {
+        applyParamsPatch({ min: event.target.value || null });
+    };
 
-        return () => {
-            isMounted = false;
-        };
-    }, []);
+    const handleMaxPriceChange = (event) => {
+        applyParamsPatch({ max: event.target.value || null });
+    };
+
+    const handleResetFilters = () => {
+        applyParamsPatch({ sort: null, category: null, min: null, max: null });
+    };
 
     const filtered = useMemo(() => {
         const min = minPrice ? Number(minPrice) : -Infinity;
@@ -76,115 +105,93 @@ const SearchPage = () => {
         return list;
     }, [categoryFilter, maxPrice, minPrice, products, query, sort]);
 
+    const resultLabel = query
+        ? t("searchPage.resultCountFor", { count: filtered.length, query: rawQuery })
+        : t("searchPage.resultCount", { count: filtered.length });
+    const breadcrumbItems = buildSearchBreadcrumbItems(t("searchPage.title"));
+
     if (isLoading) {
         return (
-            <Styled.Shell>
-                <Text>{t("common.loadingSearch")}</Text>
-            </Styled.Shell>
+            <section>
+                <Container>
+                    <Text>{t("common.loadingSearch")}</Text>
+                </Container>
+            </section>
+        );
+    }
+
+    if (error) {
+        return (
+            <section>
+                <Container>
+                    <Text>{error}</Text>
+                </Container>
+            </section>
         );
     }
 
     return (
-        <Styled.Shell>
-            <Title>{t("searchPage.title")}</Title>
-            <Styled.Top>
-                <Styled.Count>
-                    {query
-                        ? t("searchPage.resultCountFor", {
-                              count: filtered.length,
-                              query,
-                          })
-                        : t("searchPage.resultCount", { count: filtered.length })}
-                </Styled.Count>
-                <Styled.SortSelect
-                    value={sort}
-                    onChange={(event) => setSort(event.target.value)}
-                    aria-label={t("searchPage.sortAria")}
-                >
-                    <option value="relevance">{t("searchPage.sortRelevance")}</option>
-                    <option value="price-asc">{t("searchPage.sortPriceAsc")}</option>
-                    <option value="price-desc">{t("searchPage.sortPriceDesc")}</option>
-                    <option value="name">{t("searchPage.sortName")}</option>
-                </Styled.SortSelect>
-            </Styled.Top>
+        <>
+            <section>
+                <Container>
+                    <BreadCrumbs items={breadcrumbItems} />
+                </Container>
+            </section>
+            <section>
+                <Container>
+                    <SectionTitle>{t("searchPage.title")}</SectionTitle>
+                    <Styled.Top>
+                        <Styled.Count>{resultLabel}</Styled.Count>
+                        <Styled.SortSelect
+                            value={sort}
+                            onChange={handleSortChange}
+                            aria-label={t("searchPage.sortAria")}
+                        >
+                            <option value="relevance">{t("searchPage.sortRelevance")}</option>
+                            <option value="price-asc">{t("searchPage.sortPriceAsc")}</option>
+                            <option value="price-desc">{t("searchPage.sortPriceDesc")}</option>
+                            <option value="name">{t("searchPage.sortName")}</option>
+                        </Styled.SortSelect>
+                    </Styled.Top>
 
-            <Styled.Layout>
-                <div>
-                    {filtered.length === 0 ? (
-                        <Styled.Empty>
-                            <Text>{t("searchPage.empty")}</Text>
-                        </Styled.Empty>
-                    ) : (
-                        <Styled.Products>
-                            {filtered.map((product) => (
-                                <ProductCard
-                                    key={product.id}
-                                    product={product}
-                                    variant={product.cardVariant}
-                                />
-                            ))}
-                        </Styled.Products>
-                    )}
-                </div>
+                    <Styled.Layout>
+                        <div>
+                            {filtered.length === 0 ? (
+                                <Styled.Empty>
+                                    <Text>{t("searchPage.empty")}</Text>
+                                </Styled.Empty>
+                            ) : (
+                                <Styled.Products>
+                                    {filtered.map((product) => (
+                                        <ProductCard
+                                            key={product.id}
+                                            product={product}
+                                            variant={product.cardVariant}
+                                        />
+                                    ))}
+                                </Styled.Products>
+                            )}
+                        </div>
 
-                <Styled.Sidebar>
-                    <Styled.FilterBlock>
-                        <Styled.FilterTitle>{t("searchPage.category")}</Styled.FilterTitle>
-                        {Object.entries(categoryLabels).map(([key, label]) => (
-                            <Styled.CheckboxLabel key={key}>
-                                <input
-                                    type="checkbox"
-                                    checked={categoryFilter[key]}
-                                    onChange={(event) =>
-                                        setCategoryFilter((prev) => ({
-                                            ...prev,
-                                            [key]: event.target.checked,
-                                        }))
-                                    }
-                                />
-                                {label}
-                            </Styled.CheckboxLabel>
-                        ))}
-                    </Styled.FilterBlock>
-
-                    <Styled.FilterBlock>
-                        <Styled.FilterTitle>{t("searchPage.priceRange")}</Styled.FilterTitle>
-                        <Styled.RangeRow>
-                            <Styled.Field
-                                type="number"
-                                min="0"
-                                placeholder={t("searchPage.min")}
-                                value={minPrice}
-                                onChange={(event) => setMinPrice(event.target.value)}
-                            />
-                            <Styled.Field
-                                type="number"
-                                min="0"
-                                placeholder={t("searchPage.max")}
-                                value={maxPrice}
-                                onChange={(event) => setMaxPrice(event.target.value)}
-                            />
-                        </Styled.RangeRow>
-                    </Styled.FilterBlock>
-
-                    <Styled.ResetButton
-                        type="button"
-                        onClick={() => {
-                            setCategoryFilter({
-                                tshirts: true,
-                                hoodies: true,
-                                accessories: true,
-                            });
-                            setMinPrice("");
-                            setMaxPrice("");
-                            setSort("relevance");
-                        }}
-                    >
-                        {t("searchPage.reset")}
-                    </Styled.ResetButton>
-                </Styled.Sidebar>
-            </Styled.Layout>
-        </Styled.Shell>
+                        <SearchFilters
+                            categoryFilter={categoryFilter}
+                            categoryLabels={categoryLabels}
+                            titleCategory={t("searchPage.category")}
+                            titlePriceRange={t("searchPage.priceRange")}
+                            minPlaceholder={t("searchPage.min")}
+                            maxPlaceholder={t("searchPage.max")}
+                            minPrice={minPrice}
+                            maxPrice={maxPrice}
+                            onCategoryChange={handleCategoryChange}
+                            onMinPriceChange={handleMinPriceChange}
+                            onMaxPriceChange={handleMaxPriceChange}
+                            onReset={handleResetFilters}
+                            resetLabel={t("searchPage.reset")}
+                        />
+                    </Styled.Layout>
+                </Container>
+            </section>
+        </>
     );
 };
 

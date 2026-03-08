@@ -3,7 +3,7 @@ import { RouterProvider } from "react-router-dom";
 
 import { CartProvider, FavoritesProvider, ThemeContextProvider } from "@shared/lib";
 
-import { Router } from "./router";
+import router from "./router";
 import { AppThemeProvider } from "./theme";
 
 const App = () => {
@@ -12,7 +12,7 @@ const App = () => {
             <FavoritesProvider>
                 <CartProvider>
                     <AppThemeProvider>
-                        <RouterProvider router={Router} />
+                        <RouterProvider router={router} />
                         <Analytics />
                     </AppThemeProvider>
                 </CartProvider>

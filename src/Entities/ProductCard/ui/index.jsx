@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { CartButton } from "@features/CartButton";
 import { FavoriteButton } from "@features/FavoriteButton";
 
+import ProductMeta from "./components/ProductMeta";
 import Styled from "./styled";
 
 const variantLabel = {
@@ -14,7 +15,10 @@ const variantLabel = {
 
 const ProductCard = ({ product, variant = "classic" }) => {
     const { t } = useTranslation();
-    const { description, id, image, name, price } = product;
+    const { collection, description, id, image, name, price, type } = product;
+    const typeLabel = t(`productTypes.${type}`);
+    const collectionSlug = collection?.slug;
+    const collectionName = collection?.name || "Drop";
 
     const buttonPayload = {
         id,
@@ -28,17 +32,22 @@ const ProductCard = ({ product, variant = "classic" }) => {
             <Styled.ImageLink to={`/product/${id}`}>
                 <Styled.ImageWrap>
                     <Styled.Image src={image} alt={name} loading="lazy" />
-                    <Styled.Badge $variant={variant}>
-                        {variantLabel[variant] || "Drop"}
-                    </Styled.Badge>
+                    <Styled.BadgeLink
+                        to={collectionSlug ? `/collection/${collectionSlug}` : "/"}
+                        $variant={variant}
+                    >
+                        {collectionName || variantLabel[variant] || "Drop"}
+                    </Styled.BadgeLink>
                 </Styled.ImageWrap>
             </Styled.ImageLink>
 
             <Styled.Data>
-                <Styled.Top>
-                    <Styled.Code>#{String(id).padStart(2, "0")}</Styled.Code>
-                    <Styled.Tag $variant={variant}>Teoo</Styled.Tag>
-                </Styled.Top>
+                <ProductMeta
+                    id={id}
+                    type={type}
+                    typeLabel={typeLabel}
+                    variant={variant}
+                />
 
                 <Link to={`/product/${id}`}>
                     <Styled.Name>{name}</Styled.Name>
