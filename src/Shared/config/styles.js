@@ -42,10 +42,6 @@ const baseUiTokens = {
         bgDark: "#171819",
         closeBorder: "rgba(0, 0, 0, 0.22)",
     },
-    bottomNav: {
-        bgLight: "#fff",
-        bgDark: "#171819",
-    },
     input: {
         borderBottom: "#ececec",
     },

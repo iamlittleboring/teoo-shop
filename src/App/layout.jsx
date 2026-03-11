@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation } from "react-router-dom";
 
 import { Main, Wrapper } from "@shared/styles";
-import { BottomNav } from "@widgets/BottomNav";
 import { Footer } from "@widgets/Footer";
 import { Header } from "@widgets/Header";
 
@@ -23,7 +22,6 @@ const Layout = () => {
                     <Outlet />
                 </Suspense>
             </Main>
-            <BottomNav />
             <Footer />
         </Wrapper>
     );

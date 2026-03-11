@@ -70,6 +70,10 @@ const resources = {
                 open: "Відкрити вподобані",
                 removeItem: "Прибрати з вподобаних",
             },
+            account: {
+                title: "Акаунт",
+                empty: "Тут скоро з'явиться вміст акаунта.",
+            },
             searchPage: {
                 title: "Пошук",
                 resultCount: "{{count}} результатів",
@@ -178,6 +182,10 @@ const resources = {
                 add: "Add to favorites",
                 open: "Open favorites",
                 removeItem: "Remove from favorites",
+            },
+            account: {
+                title: "Account",
+                empty: "Account content will appear here soon.",
             },
             searchPage: {
                 title: "Search",

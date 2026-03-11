@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { AccountModal } from "@features/AccountModal";
 import { CartModal } from "@features/CartModal";
 import { FavoritesModal } from "@features/FavoritesModal";
 import { useTheme } from "@shared/lib";
@@ -25,9 +26,11 @@ const Header = () => {
 
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
+    const [isAccountOpen, setIsAccountOpen] = useState(false);
 
     const toggleCart = () => setIsCartOpen((prev) => !prev);
     const toggleFavorites = () => setIsFavoritesOpen((prev) => !prev);
+    const toggleAccount = () => setIsAccountOpen((prev) => !prev);
 
     return (
         <Styled.Header>
@@ -92,8 +95,10 @@ const Header = () => {
                             icon={user}
                             width="52px"
                             height="52px"
+                            onClick={toggleAccount}
                             ariaLabel={t("header.actions.account")}
                         />
+                        <AccountModal isOpen={isAccountOpen} onClose={toggleAccount} />
                         <SearchButton icon={search} />
                     </Styled.Quick>
                 </Styled.Box>
