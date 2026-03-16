@@ -39,14 +39,14 @@ const IconButtonBase = styled.button`
                 : theme.ui.iconButton.bgDark;
         }};
     box-shadow: ${({ theme, $active }) =>
-        $active ? theme.ui.iconButton.activeShadow : theme.ui.iconButton.shadow};
+        $active ? "none" : theme.ui.iconButton.shadow};
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     background-clip: padding-box;
 
     &:hover {
-        transform: translateY(-1px);
-        box-shadow: ${({ theme }) => theme.ui.iconButton.hoverShadow};
+        box-shadow: ${({ theme, $active }) =>
+            $active ? "none" : theme.ui.iconButton.hoverShadow};
     }
 `;
 

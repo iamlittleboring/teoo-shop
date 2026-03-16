@@ -2,8 +2,10 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { BreadCrumbs } from "@features/BreadCrumbs";
-import { buildCollectionBreadcrumbItems } from "@features/BreadCrumbs/lib/build-items";
+import {
+    BreadCrumbs,
+    buildCollectionBreadcrumbItems,
+} from "@features/BreadCrumbs";
 import { ProductCard } from "@entities/ProductCard";
 import { useProductsList } from "@shared/lib";
 import { Container, Text } from "@shared/styles";

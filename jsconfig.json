@@ -9,6 +9,7 @@
             "@features/*": ["Features/*"],
             "@entities/*": ["Entities/*"],
             "@shared/*": ["Shared/*"]
-        }
+        },
+      "jsx": "react"
     }
 }

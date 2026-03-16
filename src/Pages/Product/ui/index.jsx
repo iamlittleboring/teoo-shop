@@ -2,9 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { getProductById } from "@entities/ProductCard/api";
-import { BreadCrumbs } from "@features/BreadCrumbs";
-import { buildProductBreadcrumbItems } from "@features/BreadCrumbs/lib/build-items";
+import { getProductById } from "@entities/ProductCard";
+import {
+    BreadCrumbs,
+    buildProductBreadcrumbItems,
+} from "@features/BreadCrumbs";
 import { CartButton } from "@features/CartButton";
 import { ColorPicker, SizePicker } from "@features/Picker";
 import { Container, Text } from "@shared/styles";

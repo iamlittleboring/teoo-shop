@@ -3,15 +3,17 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 import { ProductCard } from "@entities/ProductCard";
-import { BreadCrumbs } from "@features/BreadCrumbs";
-import { buildSearchBreadcrumbItems } from "@features/BreadCrumbs/lib/build-items";
+import {
+    BreadCrumbs,
+    buildSearchBreadcrumbItems,
+} from "@features/BreadCrumbs";
 import {
     buildCategoryFilterMap,
     buildNextCategoriesValue,
     buildNextSearchParams,
     parseSearchQueryState,
-} from "@features/SearchFilters/model/query-state";
-import { SearchFilters } from "@features/SearchFilters";
+    SearchFilters,
+} from "@features/SearchFilters";
 import { useProductsList } from "@shared/lib";
 import { Container, Text } from "@shared/styles";
 import SectionTitle from "@shared/ui/SectionTitle";

@@ -1,3 +1,2 @@
-import ProductCard from "./ui";
-
-export { ProductCard };
+export { default as ProductCard } from "./ui";
+export { getProductById, getProductName, getProducts } from "./api";
