@@ -1,2 +1,3 @@
 export { default as ProductCard } from "./ui";
-export { getProductById, getProductName, getProducts } from "./api";
+export { getProductById, getProducts } from "./api";
+export { formatProductCode } from "./lib/format-product-code";

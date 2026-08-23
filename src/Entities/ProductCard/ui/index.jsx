@@ -2,30 +2,28 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { CartButton } from "@features/CartButton";
-import { FavoriteButton } from "@features/FavoriteButton";
 
-import ProductMeta from "./components/ProductMeta";
+import { variantLabel } from "../config";
+import { formatProductCode } from "../lib/format-product-code";
 import Styled from "./styled";
-
-const variantLabel = {
-    classic: "Classic",
-    street: "Street",
-    clean: "Minimal",
-};
 
 const ProductCard = ({ product, variant = "classic" }) => {
     const { t } = useTranslation();
-    const { collection, description, id, image, name, price, type } = product;
-    const typeLabel = t(`productTypes.${type}`);
-    const collectionSlug = collection?.slug;
-    const collectionName = collection?.name || "Drop";
-
-    const buttonPayload = {
+    const {
+        categories = [],
+        collection,
+        description,
         id,
         image,
+        inStock = true,
         name,
+        originalPrice,
         price,
-    };
+        variantId,
+    } = product;
+    const primaryCategory = categories[0] || null;
+    const collectionSlug = collection?.slug;
+    const collectionName = collection?.name || "Drop";
 
     return (
         <Styled.Box $variant={variant}>
@@ -42,12 +40,17 @@ const ProductCard = ({ product, variant = "classic" }) => {
             </Styled.ImageLink>
 
             <Styled.Data>
-                <ProductMeta
-                    id={id}
-                    type={type}
-                    typeLabel={typeLabel}
-                    variant={variant}
-                />
+                <Styled.Top>
+                    <Styled.Code>{formatProductCode(id)}</Styled.Code>
+                    {primaryCategory?.handle ? (
+                        <Styled.TagLink
+                            to={`/search?category=${encodeURIComponent(primaryCategory.handle)}`}
+                            $variant={variant}
+                        >
+                            {primaryCategory.name}
+                        </Styled.TagLink>
+                    ) : null}
+                </Styled.Top>
 
                 <Link to={`/product/${id}`}>
                     <Styled.Name>{name}</Styled.Name>
@@ -58,16 +61,27 @@ const ProductCard = ({ product, variant = "classic" }) => {
                 <Styled.Buy>
                     <Styled.Prices>
                         <Styled.PriceLabel>Price</Styled.PriceLabel>
-                        <Styled.Price>
-                            {price}{" "}
-                            <Styled.Currency>{t("common.currency")}</Styled.Currency>
-                        </Styled.Price>
+                        <Styled.PriceRow>
+                            <Styled.Price>
+                                {price} <Styled.Currency>{t("common.currency")}</Styled.Currency>
+                            </Styled.Price>
+                            {originalPrice ? (
+                                <Styled.OriginalPrice>
+                                    {originalPrice} {t("common.currency")}
+                                </Styled.OriginalPrice>
+                            ) : null}
+                        </Styled.PriceRow>
                     </Styled.Prices>
                     <Styled.Actions>
-                        <FavoriteButton product={buttonPayload} />
+                        {!inStock && (
+                            <Styled.OutOfStock>
+                                {t("common.productStatus.outOfStock")}
+                            </Styled.OutOfStock>
+                        )}
                         <CartButton
-                            product={buttonPayload}
+                            variantId={variantId}
                             styleVariant={variant}
+                            disabled={!inStock}
                         />
                     </Styled.Actions>
                 </Styled.Buy>

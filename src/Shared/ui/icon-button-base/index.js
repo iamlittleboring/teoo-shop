@@ -1,18 +1,23 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const getAccent = (theme, variant) =>
     theme.ui.accents[variant] || theme.ui.accents.classic;
 
-const IconButtonBase = styled.button`
+const BUTTON_SIZES = {
+    xs: "40px",
+    s: "52px",
+    xl: "60px",
+};
+
+const resolveButtonSize = (size = "s") => BUTTON_SIZES[size] || size;
+
+const buttonSurfaceCss = css`
     appearance: none;
     outline: none;
-    width: ${({ $size = "52px" }) => $size};
-    height: ${({ $size = "52px" }) => $size};
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 14px;
-    cursor: pointer;
     border: 1px solid
         ${({ theme, $active }) => {
             if ($active) {
@@ -43,6 +48,16 @@ const IconButtonBase = styled.button`
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     background-clip: padding-box;
+`;
+
+const interactiveButtonCss = css`
+    cursor: pointer;
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+        box-shadow: none;
+    }
 
     &:hover {
         box-shadow: ${({ theme, $active }) =>
@@ -50,7 +65,7 @@ const IconButtonBase = styled.button`
     }
 `;
 
-const IconBase = styled.img`
+const iconBaseStyles = css`
     width: ${({ $iconSize = "22px" }) => $iconSize};
     height: ${({ $iconSize = "22px" }) => $iconSize};
     filter: ${({ theme, $active }) => {
@@ -62,4 +77,16 @@ const IconBase = styled.img`
     }};
 `;
 
-export { IconButtonBase, IconBase, getAccent };
+const IconBase = styled.img`
+    ${iconBaseStyles};
+`;
+
+export {
+    BUTTON_SIZES,
+    IconBase,
+    buttonSurfaceCss,
+    getAccent,
+    iconBaseStyles,
+    interactiveButtonCss,
+    resolveButtonSize,
+};

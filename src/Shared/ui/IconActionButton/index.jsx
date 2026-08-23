@@ -1,4 +1,4 @@
-import Styled from "./styled";
+import Button from "@shared/ui/Button";
 
 const IconActionButton = ({
     as,
@@ -8,6 +8,7 @@ const IconActionButton = ({
     icon,
     iconSize,
     isActive = false,
+    disabled = false,
     onClick,
     rel,
     size,
@@ -17,32 +18,27 @@ const IconActionButton = ({
     variant = "classic",
     width,
 }) => {
-    const isLink = as === "a";
-
     return (
-        <Styled.Box
+        <Button
             as={as}
-            type={isLink ? undefined : type}
-            href={isLink ? href : undefined}
-            target={isLink ? target : undefined}
-            rel={isLink ? rel : undefined}
+            type={type}
+            href={href}
+            target={target}
+            rel={rel}
             onClick={onClick}
-            $active={isActive}
-            $variant={variant}
-            $size={size}
-            $width={width}
-            $height={height}
-            aria-label={ariaLabel}
+            disabled={disabled}
+            isActive={isActive}
+            variant={variant}
+            size={size}
+            width={width}
+            height={height}
+            ariaLabel={ariaLabel}
             title={title || ariaLabel}
+            icon={icon}
+            iconSize={iconSize}
         >
-            <Styled.Icon
-                src={icon}
-                alt=""
-                aria-hidden="true"
-                $active={isActive}
-                $iconSize={iconSize}
-            />
-        </Styled.Box>
+            {null}
+        </Button>
     );
 };
 

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation } from "react-router-dom";
 
 import { Main, Wrapper } from "@shared/styles";
+import LoadingState from "@shared/ui/LoadingState";
 import { Footer } from "@widgets/Footer";
 import { Header } from "@widgets/Header";
 
@@ -18,7 +19,7 @@ const Layout = () => {
         <Wrapper>
             <Header />
             <Main>
-                <Suspense fallback={<div>{t("common.loading")}</div>}>
+                <Suspense fallback={<LoadingState message={t("common.loading")} fullPage />}>
                     <Outlet />
                 </Suspense>
             </Main>

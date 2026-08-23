@@ -1,9 +1,12 @@
 import styled from "styled-components";
 
+import { CheckboxBox, CheckboxInput, CheckboxLabel } from "@shared/styles/form";
+import Button from "@shared/ui/Button";
+
 const Sidebar = styled.aside`
     border: 1px solid ${({ theme }) => theme.ui.panel.border};
-    border-radius: 12px;
-    padding: 14px;
+    border-radius: 14px;
+    padding: 18px;
     height: fit-content;
     position: sticky;
     top: 12px;
@@ -19,44 +22,68 @@ const Sidebar = styled.aside`
 const FilterBlock = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 18px;
+    gap: 12px;
+    margin-bottom: 22px;
+
+    &:last-of-type {
+        margin-bottom: 18px;
+    }
 `;
 
 const FilterTitle = styled.h3`
-    font-size: 14px;
-    letter-spacing: 0.06em;
+    font-size: 12px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    font-weight: 700;
     color: ${({ theme }) => theme.colors.text};
-    opacity: 0.7;
-`;
-
-const CheckboxLabel = styled.label`
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
+    opacity: 0.6;
 `;
 
 const RangeRow = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 10px;
 `;
 
 const Field = styled.input`
-    border: 1px solid ${({ theme }) => theme.ui.panel.border};
-    border-radius: 8px;
-    padding: 8px;
+    border: 1px solid
+        ${({ theme }) =>
+            theme.mode === "light"
+                ? theme.ui.iconButton.borderLight
+                : theme.ui.iconButton.borderDark};
+    border-radius: 10px;
+    padding: 10px 12px;
+    min-width: 0;
+    background-color: ${({ theme }) =>
+        theme.mode === "light" ? theme.ui.iconButton.bgLight : theme.ui.iconButton.bgDark};
     color: ${({ theme }) => theme.colors.text};
+    font-weight: 700;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+
+    &::placeholder {
+        color: ${({ theme }) => theme.colors.text};
+        opacity: 0.42;
+        font-weight: 500;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: ${({ theme }) => theme.ui.accents.classic};
+    }
+
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 `;
 
-const ResetButton = styled.button`
-    border: 1px solid ${({ theme }) => theme.ui.panel.danger};
-    color: ${({ theme }) => theme.ui.panel.danger};
-    border-radius: 8px;
-    padding: 8px 10px;
-    cursor: pointer;
+const ResetButton = styled(Button)`
+    justify-content: center;
+    align-self: flex-start;
 `;
 
 const Styled = {
@@ -64,6 +91,8 @@ const Styled = {
     FilterBlock,
     FilterTitle,
     CheckboxLabel,
+    CheckboxInput,
+    CheckboxBox,
     RangeRow,
     Field,
     ResetButton,

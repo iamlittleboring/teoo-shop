@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-const Box = styled.div``;
+const Box = styled.div`
+    max-width: 600px;
+`;
 
 const MainImageBlock = styled.div`
     max-width: 100%;
@@ -51,8 +53,15 @@ const ListButton = styled.button`
     }
 `;
 
+const THUMBS_PER_ROW = 3;
+
 const ListImage = styled.img`
-    min-width: calc(33% - 5px);
+    /* Thumbnails always stay at their normal ~33% width, whether there's 1
+       photo or 10 — stretching a lone thumbnail to fill the row read as
+       oversized/broken. With 4+ photos this locks the row to 3 visible at a
+       time and the rest scrolls horizontally via the arrows. */
+    width: calc(${100 / THUMBS_PER_ROW}% - ${(10 * (THUMBS_PER_ROW - 1)) / THUMBS_PER_ROW}px);
+    flex-shrink: 0;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: 5px;

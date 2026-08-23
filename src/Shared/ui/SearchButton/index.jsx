@@ -3,10 +3,14 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { Input } from "@shared/styles";
+import { IconBase } from "@shared/ui/icon-button-base";
 
 import Styled from "./styled";
 
-const SearchButton = ({ icon }) => {
+// `forceExpanded` is for the mobile menu panel — the input's expand/collapse
+// is otherwise driven by hover, which doesn't exist on touch, so without it
+// the search field would be permanently invisible on mobile.
+const SearchButton = ({ forceExpanded = false, icon }) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
 
@@ -28,7 +32,11 @@ const SearchButton = ({ icon }) => {
         setFocus(true);
     };
 
-    const handleOnUnFocus = () => {
+    const handleOnUnFocus = (event) => {
+        if (event?.currentTarget?.contains(event.relatedTarget)) {
+            return;
+        }
+
         if (!search) {
             setFocus(false);
             setHover(false);
@@ -54,17 +62,23 @@ const SearchButton = ({ icon }) => {
 
     return (
         <Styled.Box
-            as="form"
+            $wide={forceExpanded}
             onSubmit={handleSubmit}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleMouseLeave}
             onFocus={handleOnFocus}
             onBlur={handleOnUnFocus}
         >
-            <button type="submit" aria-label={t("searchInput.open")}>
-                <Styled.Image src={icon} alt="" aria-hidden="true" />
-            </button>
-            <Styled.Input $hover={hover}>
+            <Styled.SubmitButton
+                type="submit"
+                size="s"
+                ariaLabel={t("searchInput.open")}
+                title={t("searchInput.open")}
+                appearance="ghost"
+            >
+                <IconBase src={icon} alt="" aria-hidden="true" />
+            </Styled.SubmitButton>
+            <Styled.Input $hover={forceExpanded || hover} $wide={forceExpanded}>
                 <Input
                     type="text"
                     aria-label={t("searchInput.products")}

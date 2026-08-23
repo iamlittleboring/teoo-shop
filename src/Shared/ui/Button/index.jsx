@@ -1,36 +1,67 @@
-import IconActionButton from "@shared/ui/IconActionButton";
+import Styled from "./styled";
 
 const Button = ({
     as,
     ariaLabel,
-    height = "auto",
+    appearance,
+    children,
+    disabled = false,
+    height,
     href,
     icon,
+    iconPosition = "start",
+    iconSize,
     isActive = false,
     onClick,
     rel,
+    size = "s",
     target,
     title,
+    to,
     type = "button",
     variant = "classic",
-    width = "auto",
+    width,
+    ...props
 }) => {
+    const isButtonElement = !href && !to && (!as || as === "button");
+    const hasText = Boolean(children);
+
     return (
-        <IconActionButton
-            as={as}
-            ariaLabel={ariaLabel}
-            height={height}
+        <Styled.Box
+            as={as || (href ? "a" : "button")}
+            type={isButtonElement ? type : undefined}
             href={href}
-            icon={icon}
-            isActive={isActive}
+            to={isButtonElement ? undefined : to}
+            target={isButtonElement ? undefined : target}
+            rel={isButtonElement ? undefined : rel}
             onClick={onClick}
-            rel={rel}
-            target={target}
-            title={title}
-            type={type}
-            variant={variant}
-            width={width}
-        />
+            disabled={isButtonElement ? disabled : undefined}
+            aria-label={ariaLabel}
+            title={title || ariaLabel}
+            $active={isActive}
+            $variant={variant}
+            $appearance={appearance}
+            $size={size}
+            $hasText={hasText}
+            $width={width}
+            $height={height}
+            {...props}
+        >
+            {icon ? (
+                <Styled.Icon
+                    src={icon}
+                    alt=""
+                    aria-hidden="true"
+                    $active={isActive}
+                    $iconSize={iconSize}
+                    $size={size}
+                    $hasText={hasText}
+                />
+            ) : null}
+            {children ? (
+                <Styled.Label $iconPosition={iconPosition}>{children}</Styled.Label>
+            ) : null}
+        </Styled.Box>
     );
 };
 

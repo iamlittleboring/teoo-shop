@@ -1,32 +1,28 @@
 import IconActionButton from "@shared/ui/IconActionButton";
 import cartIcon from "@shared/assets/images/cart.svg";
-import { createCartKey, useCart } from "@shared/lib";
 import { useTranslation } from "react-i18next";
+import { useCart } from "@shared/lib";
 
-const CartButton = ({ product, selectedColor, selectedSize, styleVariant = "classic" }) => {
-    const { addItem, removeItem, isInCart } = useCart();
+const CartButton = ({ disabled = false, options = [], styleVariant = "classic", variantId }) => {
+    const { addItem, isInCart, isLoading, isUpdating, items, removeItem } = useCart();
     const { t } = useTranslation();
-
-    const payload = {
-        productId: product.id,
-        size: selectedSize,
-        color: selectedColor,
-    };
-
-    const isAdded = isInCart(payload);
+    const isAdded = isInCart({ variantId });
+    const activeItem = items.find((item) => item.variantId === variantId);
 
     const handleOnClick = () => {
+        if (!variantId) {
+            return;
+        }
+
         if (isAdded) {
-            removeItem(createCartKey(payload));
+            removeItem(activeItem?.lineId);
             return;
         }
 
         addItem({
-            ...payload,
-            image: product.image,
-            name: product.name,
-            price: product.price,
+            options,
             quantity: 1,
+            variantId,
         });
     };
 
@@ -36,6 +32,7 @@ const CartButton = ({ product, selectedColor, selectedSize, styleVariant = "clas
             onClick={handleOnClick}
             isActive={isAdded}
             variant={styleVariant}
+            disabled={disabled || !variantId || isLoading || isUpdating}
             ariaLabel={isAdded ? t("cart.removeItem") : t("cart.addItem")}
             title={isAdded ? t("cart.removeItem") : t("cart.addItem")}
         />

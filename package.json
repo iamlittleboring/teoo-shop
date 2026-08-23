@@ -11,8 +11,9 @@
     "test": "node --test \"tests/**/*.test.js\""
   },
   "dependencies": {
+    "@medusajs/js-sdk": "^2.13.6",
+    "@sentry/react": "^10.70.0",
     "@vercel/analytics": "^1.4.1",
-    "axios": "^1.7.9",
     "i18next": "^25.8.14",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

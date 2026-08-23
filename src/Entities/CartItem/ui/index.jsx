@@ -1,18 +1,18 @@
 import ModalProductItem from "@shared/ui/ModalProductItem";
+import { isSwatchOptionTitle } from "@shared/lib";
 import trashIcon from "@shared/assets/images/trash.svg";
 import { useTranslation } from "react-i18next";
 
 import Styled from "./styled";
 
 const CartItem = ({
-    color,
     count,
     image,
     name,
     onRemove,
+    options = [],
     price,
     setCount,
-    size,
 }) => {
     const { t } = useTranslation();
 
@@ -23,11 +23,16 @@ const CartItem = ({
             price={price}
             details={
                 <Styled.Details>
-                    {size && <Styled.Size>{t("cart.size", { size })}</Styled.Size>}
-                    {color && (
-                        <Styled.Color>
-                            {t("cart.color")} <Styled.Dot $color={color} />
-                        </Styled.Color>
+                    {options.map((option) =>
+                        isSwatchOptionTitle(option.title) ? (
+                            <Styled.Color key={option.title}>
+                                {option.title} <Styled.Dot $color={option.value} />
+                            </Styled.Color>
+                        ) : (
+                            <Styled.Size key={option.title}>
+                                {option.title}: {option.value}
+                            </Styled.Size>
+                        )
                     )}
                 </Styled.Details>
             }

@@ -21,12 +21,13 @@ const SearchFilters = ({
                 <Styled.FilterTitle>{titleCategory}</Styled.FilterTitle>
                 {Object.entries(categoryLabels).map(([key, label]) => (
                     <Styled.CheckboxLabel key={key}>
-                        <input
+                        <Styled.CheckboxInput
                             type="checkbox"
                             name={key}
                             checked={categoryFilter[key]}
                             onChange={onCategoryChange}
                         />
+                        <Styled.CheckboxBox aria-hidden="true" />
                         {label}
                     </Styled.CheckboxLabel>
                 ))}
@@ -52,7 +53,12 @@ const SearchFilters = ({
                 </Styled.RangeRow>
             </Styled.FilterBlock>
 
-            <Styled.ResetButton type="button" onClick={onReset}>
+            <Styled.ResetButton
+                type="button"
+                onClick={onReset}
+                size="xs"
+                appearance="danger-outline"
+            >
                 {resetLabel}
             </Styled.ResetButton>
         </Styled.Sidebar>

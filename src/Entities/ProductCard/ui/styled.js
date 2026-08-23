@@ -153,6 +153,15 @@ const Actions = styled.div`
     gap: 8px;
 `;
 
+const OutOfStock = styled.span`
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: ${({ theme }) => theme.ui.panel.danger};
+    white-space: nowrap;
+`;
+
 const Prices = styled.div`
     display: flex;
     flex-direction: column;
@@ -167,11 +176,26 @@ const PriceLabel = styled.span`
     opacity: ${({ theme }) => theme.ui.productCard.priceLabelOpacity};
 `;
 
+const PriceRow = styled.div`
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+`;
+
 const Price = styled.p`
     font-size: 30px;
     font-weight: 800;
     color: ${({ theme }) => theme.colors.text};
     line-height: 1;
+`;
+
+const OriginalPrice = styled.p`
+    font-size: 16px;
+    font-weight: 600;
+    color: ${({ theme }) => theme.colors.text};
+    opacity: 0.5;
+    text-decoration: line-through;
 `;
 
 const Currency = styled.span`
@@ -193,9 +217,12 @@ const Styled = {
     Desc,
     Buy,
     Actions,
+    OutOfStock,
     Prices,
     PriceLabel,
+    PriceRow,
     Price,
+    OriginalPrice,
     Currency,
 };
 

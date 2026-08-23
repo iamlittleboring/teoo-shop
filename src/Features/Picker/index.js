@@ -1,3 +1,3 @@
-import { SizePicker, ColorPicker } from "./ui";
+import { OptionPicker } from "./ui";
 
-export { SizePicker, ColorPicker };
+export { OptionPicker };

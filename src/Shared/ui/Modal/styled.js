@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Button from "@shared/ui/Button";
 
 const Overlay = styled.div`
     position: fixed;
@@ -25,17 +26,29 @@ const Container = styled.div`
     overflow: hidden;
 `;
 
-const CloseButton = styled.button`
+// Content taller than the modal's fixed height scrolls in here while the
+// close button (a sibling, not a child) stays put — it's positioned against
+// Container, not against this scrolling box.
+const Body = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+`;
+
+const CloseButton = styled(Button)`
     position: absolute;
     top: 8px;
     right: 8px;
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     font-size: 20px;
-    cursor: pointer;
-    border: 1px solid ${({ theme }) => theme.ui.modal.closeBorder};
-    border-radius: 6px;
-    padding: 4px 8px;
+    z-index: 999;
 `;
 
-const Styled = { Overlay, Container, CloseButton };
+const Styled = { Overlay, Container, Body, CloseButton };
 
 export default Styled;

@@ -1,5 +1,7 @@
 const buildSearchBreadcrumbItems = (title) => [{ label: title }];
 
+const buildCheckoutBreadcrumbItems = (title) => [{ label: title }];
+
 const buildCollectionBreadcrumbItems = (collectionName) => [
     { label: collectionName },
 ];
@@ -23,6 +25,7 @@ const buildProductBreadcrumbItems = ({
 ];
 
 export {
+    buildCheckoutBreadcrumbItems,
     buildCollectionBreadcrumbItems,
     buildProductBreadcrumbItems,
     buildSearchBreadcrumbItems,

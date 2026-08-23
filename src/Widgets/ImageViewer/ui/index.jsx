@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+
+import { computeZoomPosition } from "../lib/zoom-position";
 import Styled from "./styled";
 
 const ImageViewer = ({ images }) => {
@@ -31,10 +33,7 @@ const ImageViewer = ({ images }) => {
         const { offsetX, offsetY, target } = e.nativeEvent;
         const { width, height } = target;
 
-        const x = (offsetX / width) * 100;
-        const y = (offsetY / height) * 100;
-
-        setZoomPosition({ x, y });
+        setZoomPosition(computeZoomPosition({ offsetX, offsetY, width, height }));
         setIsZoomed(true);
     };
 
@@ -48,6 +47,11 @@ const ImageViewer = ({ images }) => {
             slider.scrollBy({ left: scrollAmount, behavior: "smooth" });
         }
     };
+
+    // With fewer than 4 photos the whole row fits without scrolling, so the
+    // nav arrows would have nothing to do — hide them instead of leaving
+    // dead controls in the UI.
+    const showNav = images.length >= 4;
 
     return (
         <Styled.Box>
@@ -65,12 +69,14 @@ const ImageViewer = ({ images }) => {
                 />
             </Styled.MainImageBlock>
             <Styled.List>
-                <Styled.ListButton
-                    className="left"
-                    onClick={() => handleScroll("left")}
-                >
-                    {"<"}
-                </Styled.ListButton>
+                {showNav && (
+                    <Styled.ListButton
+                        className="left"
+                        onClick={() => handleScroll("left")}
+                    >
+                        {"<"}
+                    </Styled.ListButton>
+                )}
                 <Styled.ListInner ref={sliderRef}>
                     {images.map((image, index) => (
                         <Styled.ListImage
@@ -84,12 +90,14 @@ const ImageViewer = ({ images }) => {
                         />
                     ))}
                 </Styled.ListInner>
-                <Styled.ListButton
-                    className="right"
-                    onClick={() => handleScroll("right")}
-                >
-                    {">"}
-                </Styled.ListButton>
+                {showNav && (
+                    <Styled.ListButton
+                        className="right"
+                        onClick={() => handleScroll("right")}
+                    >
+                        {">"}
+                    </Styled.ListButton>
+                )}
             </Styled.List>
         </Styled.Box>
     );

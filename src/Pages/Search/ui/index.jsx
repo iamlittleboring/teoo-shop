@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
@@ -14,37 +14,46 @@ import {
     parseSearchQueryState,
     SearchFilters,
 } from "@features/SearchFilters";
-import { useProductsList } from "@shared/lib";
+import { paginate, useProductsList } from "@shared/lib";
 import { Container, Text } from "@shared/styles";
+import LoadingState from "@shared/ui/LoadingState";
+import Pagination from "@shared/ui/Pagination";
 import SectionTitle from "@shared/ui/SectionTitle";
+import Select from "@shared/ui/Select";
 
+import { PRODUCTS_PER_PAGE } from "../config";
+import { buildCategoryLabels, deriveAvailableCategories, filterAndSortProducts } from "../lib/filter-products";
 import Styled from "./styled";
 
 const SearchPage = () => {
     const { t } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
     const { data: products, isLoading, error } = useProductsList();
+    const availableCategories = useMemo(
+        () => deriveAvailableCategories(products),
+        [products]
+    );
+    const availableCategoryHandles = useMemo(
+        () => availableCategories.map((category) => category.handle),
+        [availableCategories]
+    );
 
     const queryState = useMemo(
-        () => parseSearchQueryState(searchParams),
-        [searchParams]
+        () => parseSearchQueryState(searchParams, availableCategoryHandles),
+        [availableCategoryHandles, searchParams]
     );
 
     const { maxPrice, minPrice, query, rawQuery, selectedCategories, sort } =
         queryState;
 
     const categoryFilter = useMemo(
-        () => buildCategoryFilterMap(selectedCategories),
-        [selectedCategories]
+        () => buildCategoryFilterMap(selectedCategories, availableCategoryHandles),
+        [availableCategoryHandles, selectedCategories]
     );
 
     const categoryLabels = useMemo(
-        () => ({
-            tshirts: t("searchPage.categories.tshirts"),
-            hoodies: t("searchPage.categories.hoodies"),
-            accessories: t("searchPage.categories.accessories"),
-        }),
-        [t]
+        () => buildCategoryLabels(availableCategories),
+        [availableCategories]
     );
 
     const applyParamsPatch = (patch) => {
@@ -63,7 +72,8 @@ const SearchPage = () => {
         const categoryValue = buildNextCategoriesValue(
             selectedCategories,
             categoryKey,
-            isChecked
+            isChecked,
+            availableCategoryHandles
         );
 
         applyParamsPatch({ category: categoryValue });
@@ -81,31 +91,33 @@ const SearchPage = () => {
         applyParamsPatch({ sort: null, category: null, min: null, max: null });
     };
 
-    const filtered = useMemo(() => {
-        const min = minPrice ? Number(minPrice) : -Infinity;
-        const max = maxPrice ? Number(maxPrice) : Infinity;
+    const filtered = useMemo(
+        () =>
+            filterAndSortProducts(products, {
+                availableCategoryHandles,
+                categoryFilter,
+                maxPrice,
+                minPrice,
+                query,
+                sort,
+            }),
+        [availableCategoryHandles, categoryFilter, maxPrice, minPrice, products, query, sort]
+    );
 
-        let list = products.filter((product) => {
-            const categoryAllowed = categoryFilter[product.category];
-            const inPrice = product.price >= min && product.price <= max;
-            const inQuery =
-                !query ||
-                product.name.toLowerCase().includes(query) ||
-                product.description.toLowerCase().includes(query);
+    const [page, setPage] = useState(1);
 
-            return categoryAllowed && inPrice && inQuery;
-        });
+    // Any change to the URL-driven filters/sort/query invalidates whatever
+    // page the user was on — jumping back to page 1 avoids landing on a now
+    // out-of-range or unrelated page of results.
+    useEffect(() => {
+        setPage(1);
+    }, [searchParams]);
 
-        if (sort === "price-asc") {
-            list = [...list].sort((a, b) => a.price - b.price);
-        } else if (sort === "price-desc") {
-            list = [...list].sort((a, b) => b.price - a.price);
-        } else if (sort === "name") {
-            list = [...list].sort((a, b) => a.name.localeCompare(b.name));
-        }
-
-        return list;
-    }, [categoryFilter, maxPrice, minPrice, products, query, sort]);
+    const { pageCount, currentPage, pageItems: paginated } = paginate(
+        filtered,
+        page,
+        PRODUCTS_PER_PAGE
+    );
 
     const resultLabel = query
         ? t("searchPage.resultCountFor", { count: filtered.length, query: rawQuery })
@@ -116,7 +128,7 @@ const SearchPage = () => {
         return (
             <section>
                 <Container>
-                    <Text>{t("common.loadingSearch")}</Text>
+                    <LoadingState message={t("common.loadingSearch")} fullPage />
                 </Container>
             </section>
         );
@@ -144,7 +156,7 @@ const SearchPage = () => {
                     <SectionTitle>{t("searchPage.title")}</SectionTitle>
                     <Styled.Top>
                         <Styled.Count>{resultLabel}</Styled.Count>
-                        <Styled.SortSelect
+                        <Select
                             value={sort}
                             onChange={handleSortChange}
                             aria-label={t("searchPage.sortAria")}
@@ -153,7 +165,7 @@ const SearchPage = () => {
                             <option value="price-asc">{t("searchPage.sortPriceAsc")}</option>
                             <option value="price-desc">{t("searchPage.sortPriceDesc")}</option>
                             <option value="name">{t("searchPage.sortName")}</option>
-                        </Styled.SortSelect>
+                        </Select>
                     </Styled.Top>
 
                     <Styled.Layout>
@@ -163,15 +175,22 @@ const SearchPage = () => {
                                     <Text>{t("searchPage.empty")}</Text>
                                 </Styled.Empty>
                             ) : (
-                                <Styled.Products>
-                                    {filtered.map((product) => (
-                                        <ProductCard
-                                            key={product.id}
-                                            product={product}
-                                            variant={product.cardVariant}
-                                        />
-                                    ))}
-                                </Styled.Products>
+                                <>
+                                    <Styled.Products>
+                                        {paginated.map((product) => (
+                                            <ProductCard
+                                                key={product.id}
+                                                product={product}
+                                                variant={product.cardVariant}
+                                            />
+                                        ))}
+                                    </Styled.Products>
+                                    <Pagination
+                                        page={currentPage}
+                                        pageCount={pageCount}
+                                        onChange={setPage}
+                                    />
+                                </>
                             )}
                         </div>
 

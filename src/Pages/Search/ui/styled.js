@@ -6,19 +6,16 @@ const Top = styled.div`
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 `;
 
 const Count = styled.p`
     color: ${({ theme }) => theme.colors.text};
-    opacity: 0.75;
-`;
-
-const SortSelect = styled.select`
-    border: 1px solid ${({ theme }) => theme.ui.panel.border};
-    border-radius: 8px;
-    padding: 8px 10px;
-    color: ${({ theme }) => theme.colors.text};
+    opacity: 0.6;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
 `;
 
 const Layout = styled.div`
@@ -39,15 +36,21 @@ const Products = styled.div`
 `;
 
 const Empty = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    text-align: center;
+    padding: 40px 20px;
     border: 1px solid ${({ theme }) => theme.ui.panel.border};
-    border-radius: 10px;
-    padding: 20px;
+    border-radius: 14px;
+    background: ${({ theme }) =>
+        theme.mode === "light" ? theme.ui.panel.bgLight : theme.ui.panel.bgDark};
 `;
 
 const Styled = {
     Top,
     Count,
-    SortSelect,
     Layout,
     Products,
     Empty,

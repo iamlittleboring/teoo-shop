@@ -1,5 +1,4 @@
-import { CATEGORIES, CATEGORY_ALIASES, SEARCH_SORTS } from "@shared/config";
-
+const SEARCH_SORTS = ["relevance", "price-asc", "price-desc", "name"];
 const allowedSortSet = new Set(SEARCH_SORTS);
 
 /**
@@ -12,16 +11,11 @@ const allowedSortSet = new Set(SEARCH_SORTS);
  * @property {string[]} selectedCategories
  */
 
-const normalizeCategory = (value) => {
-    const key = String(value || "").trim().toLowerCase();
-    return CATEGORY_ALIASES[key] || null;
-};
-
 /**
  * @param {URLSearchParams} searchParams
  * @returns {SearchQueryState}
  */
-const parseSearchQueryState = (searchParams) => {
+const parseSearchQueryState = (searchParams, availableCategories) => {
     const rawQuery = (searchParams.get("q") || "").trim();
     const sortParam = searchParams.get("sort");
     const categoryParam = searchParams.get("category");
@@ -31,11 +25,12 @@ const parseSearchQueryState = (searchParams) => {
               new Set(
                   categoryParam
                       .split(",")
-                      .map(normalizeCategory)
+                      .map((value) => String(value || "").trim().toLowerCase())
+                      .filter((value) => availableCategories.includes(value))
                       .filter(Boolean)
               )
           )
-        : CATEGORIES;
+        : availableCategories;
 
     return {
         rawQuery,
@@ -43,12 +38,13 @@ const parseSearchQueryState = (searchParams) => {
         sort: allowedSortSet.has(sortParam) ? sortParam : "relevance",
         minPrice: searchParams.get("min") || "",
         maxPrice: searchParams.get("max") || "",
-        selectedCategories: selectedCategories.length > 0 ? selectedCategories : CATEGORIES,
+        selectedCategories:
+            selectedCategories.length > 0 ? selectedCategories : availableCategories,
     };
 };
 
-const buildCategoryFilterMap = (selectedCategories) =>
-    CATEGORIES.reduce((acc, category) => {
+const buildCategoryFilterMap = (selectedCategories, availableCategories) =>
+    availableCategories.reduce((acc, category) => {
         acc[category] = selectedCategories.includes(category);
         return acc;
     }, {});
@@ -68,7 +64,12 @@ const buildNextSearchParams = (searchParams, patch) => {
     return next;
 };
 
-const buildNextCategoriesValue = (selectedCategories, categoryKey, isChecked) => {
+const buildNextCategoriesValue = (
+    selectedCategories,
+    categoryKey,
+    isChecked,
+    availableCategories
+) => {
     const next = new Set(selectedCategories);
 
     if (isChecked) {
@@ -77,8 +78,8 @@ const buildNextCategoriesValue = (selectedCategories, categoryKey, isChecked) =>
         next.delete(categoryKey);
     }
 
-    const nextList = CATEGORIES.filter((category) => next.has(category));
-    return nextList.length === CATEGORIES.length ? null : nextList.join(",");
+    const nextList = availableCategories.filter((category) => next.has(category));
+    return nextList.length === availableCategories.length ? null : nextList.join(",");
 };
 
 export {

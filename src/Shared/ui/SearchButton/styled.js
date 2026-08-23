@@ -1,33 +1,17 @@
 import styled from "styled-components";
 
-const Box = styled.div`
-    display: inline-flex;
-    justify-content: center;
-    padding: 14px;
-    max-height: 52px;
-    gap: 12px;
-    align-items: center;
-    border-radius: 14px;
-    border: 1px solid
-        ${({ theme }) =>
-            theme.mode === "light"
-                ? theme.ui.iconButton.borderLight
-                : theme.ui.iconButton.borderDark};
-    background: ${({ theme }) =>
-        theme.mode === "light"
-            ? theme.ui.iconButton.bgLight
-            : theme.ui.iconButton.bgDark};
-    box-shadow: ${({ theme }) => theme.ui.iconButton.shadow};
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    position: relative;
-    overflow: hidden;
+import Button from "@shared/ui/Button";
+import { buttonSurfaceCss } from "@shared/ui/icon-button-base";
 
-    button {
-        cursor: pointer;
-        padding: 0;
-        margin: 0;
-        display: inline-flex;
-    }
+const Box = styled.form`
+    ${buttonSurfaceCss};
+
+    justify-content: flex-start;
+    padding: 14px;
+    min-height: 52px;
+    width: ${({ $wide }) => ($wide ? "100%" : "auto")};
+    gap: 12px;
+    overflow: hidden;
 
     &:hover {
         transform: translateY(-1px);
@@ -35,24 +19,32 @@ const Box = styled.div`
     }
 `;
 
-const Input = styled.div`
-    left: 100%;
-    transition: all 0.2s ease-in-out;
-    position: ${({ $hover }) => ($hover ? "static !important" : "absolute")};
+const SubmitButton = styled(Button)`
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    flex-shrink: 0;
 `;
 
-const Image = styled.img`
-    width: 22px;
-    height: 22px;
-    filter: invert(
-        ${({ theme }) => (theme.mode === "light" ? "0%" : "100%")}
-    );
+const Input = styled.div`
+    position: ${({ $hover }) => ($hover ? "static" : "absolute")};
+    left: ${({ $hover }) => ($hover ? "0" : "100%")};
+    width: ${({ $hover, $wide }) => ($hover ? ($wide ? "100%" : "220px") : "0")};
+    opacity: ${({ $hover }) => ($hover ? 1 : 0)};
+    pointer-events: ${({ $hover }) => ($hover ? "auto" : "none")};
+    transition: width 0.2s ease, opacity 0.2s ease;
+
+    input {
+        min-width: 0;
+        width: 100%;
+    }
 `;
 
 const Styled = {
     Box,
+    SubmitButton,
     Input,
-    Image,
 };
 
 export default Styled;

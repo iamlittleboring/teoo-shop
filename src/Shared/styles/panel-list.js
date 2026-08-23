@@ -1,9 +1,28 @@
 import styled from "styled-components";
+import Button from "@shared/ui/Button";
+import { Text } from "./index";
 
 const PanelContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 14px;
+`;
+
+const PanelTitle = styled.h3`
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.text};
+    opacity: 0.6;
+`;
+
+const StatusMessage = styled(Text)`
+    color: ${({ theme, $tone }) =>
+        $tone === "error" ? theme.ui.panel.danger : theme.colors.text};
+    opacity: ${({ $tone }) => ($tone ? 1 : 0.68)};
+    font-size: 14px;
+    line-height: 1.4;
 `;
 
 const PanelCard = styled.article`
@@ -48,27 +67,19 @@ const Price = styled.p`
     color: ${({ theme }) => theme.colors.text};
 `;
 
-const DangerLinkButton = styled.button`
-    border-bottom: 1px solid ${({ theme }) => theme.ui.panel.danger};
-    color: ${({ theme }) => theme.ui.panel.danger};
-    cursor: pointer;
-
-    &:hover {
-        opacity: 0.8;
-    }
+const DangerLinkButton = styled(Button)`
+    min-width: auto;
+    width: auto;
+    height: auto;
+    min-height: auto;
+    padding: 0;
+    border-radius: 0;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
 `;
 
-const DangerOutlineButton = styled.button`
+const DangerOutlineButton = styled(Button)`
     align-self: flex-start;
-    border: 1px solid ${({ theme }) => theme.ui.panel.danger};
-    border-radius: 8px;
-    color: ${({ theme }) => theme.ui.panel.danger};
-    padding: 8px 12px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: ${({ theme }) => theme.ui.panel.dangerHoverBg};
-    }
 `;
 
 const FooterRow = styled.div`
@@ -94,7 +105,9 @@ export {
     Name,
     PanelCard,
     PanelContainer,
+    PanelTitle,
     Price,
+    StatusMessage,
     Thumb,
     Total,
 };

@@ -1,167 +1,156 @@
-import photo1 from "@shared/assets/images/product/1.jpg";
-import photo2 from "@shared/assets/images/product/2.jpg";
-import photo3 from "@shared/assets/images/product/3.jpg";
-import photo4 from "@shared/assets/images/product/4.jpg";
-import photo5 from "@shared/assets/images/product/5.jpg";
-import photoT1 from "@shared/assets/images/product/TYANKAAAAAAAAA.jpg";
-import photoT2 from "@shared/assets/images/product/TYANKAAAAAAAAA2.jpg";
+import { resolveRegionId, sdk } from "@shared/lib/medusa";
 
-const productCatalog = [
-    {
-        id: 1,
-        name: "Classic Tee",
-        description:
-            "Essential cotton t-shirt with a relaxed fit and clean silhouette for everyday wear.",
-        price: 750,
-        category: "tshirts",
-        type: "tshirt",
-        collection: { slug: "roflopug", name: "Roflopug" },
-        cardVariant: "classic",
-        images: [photo1, photo2, photo3],
-        availableSizes: ["XS", "S", "M", "L"],
-        availableColors: ["#FFC285", "#FFFFFF", "#171819"],
-    },
-    {
-        id: 2,
-        name: "Street Drop Hoodie",
-        description:
-            "Heavyweight brushed hoodie with dropped shoulders and oversized shape for layered street outfits.",
-        price: 1290,
-        category: "hoodies",
-        type: "hoodie",
-        collection: { slug: "night-drip", name: "Night Drip" },
-        cardVariant: "street",
-        images: [photo4, photo5, photoT1],
-        availableSizes: ["S", "M", "L", "XL"],
-        availableColors: ["#FFFFFF", "#C9D6E8", "#8A4B2D"],
-    },
-    {
-        id: 3,
-        name: "Signature Cap",
-        description:
-            "Minimal six-panel cap with curved visor and stitched logo for finishing everyday looks.",
-        price: 590,
-        category: "accessories",
-        type: "accessory",
-        collection: { slug: "clean-lab", name: "Clean Lab" },
-        cardVariant: "clean",
-        images: [photoT2, photo3, photo1],
-        availableSizes: ["One Size"],
-        availableColors: ["#171819", "#FFFFFF", "#EA5B2A"],
-    },
-    {
-        id: 4,
-        name: "Oversized Tee",
-        description:
-            "Boxy oversized t-shirt with dropped sleeves and smooth heavyweight cotton texture.",
-        price: 840,
-        category: "tshirts",
-        type: "tshirt",
-        collection: { slug: "roflopug", name: "Roflopug" },
-        cardVariant: "classic",
-        images: [photo2, photo4, photo1],
-        availableSizes: ["S", "M", "L", "XL"],
-        availableColors: ["#FFFFFF", "#CFCFCF", "#171819"],
-    },
-    {
-        id: 5,
-        name: "Zip Hoodie",
-        description:
-            "Front-zip hoodie with dense fleece fabric and structured hood for colder days.",
-        price: 1390,
-        category: "hoodies",
-        type: "hoodie",
-        collection: { slug: "night-drip", name: "Night Drip" },
-        cardVariant: "street",
-        images: [photo5, photoT1, photo3],
-        availableSizes: ["M", "L", "XL"],
-        availableColors: ["#171819", "#4A4A4A", "#FFFFFF"],
-    },
-    {
-        id: 6,
-        name: "Canvas Tote",
-        description:
-            "Durable canvas tote bag with reinforced handles and clean printed logo detail.",
-        price: 490,
-        category: "accessories",
-        type: "accessory",
-        collection: { slug: "clean-lab", name: "Clean Lab" },
-        cardVariant: "clean",
-        images: [photoT2, photo1, photo4],
-        availableSizes: ["One Size"],
-        availableColors: ["#FFFFFF", "#EAE3D6", "#171819"],
-    },
-    {
-        id: 7,
-        name: "Graphic Tee",
-        description:
-            "Soft jersey tee with front print placement and balanced regular silhouette.",
-        price: 910,
-        category: "tshirts",
-        type: "tshirt",
-        collection: { slug: "roflopug", name: "Roflopug" },
-        cardVariant: "classic",
-        images: [photo3, photo2, photo5],
-        availableSizes: ["XS", "S", "M", "L"],
-        availableColors: ["#FFFFFF", "#EA5B2A", "#171819"],
-    },
-    {
-        id: 8,
-        name: "Core Hoodie",
-        description:
-            "Essential pullover hoodie with ribbed cuffs and soft brushed interior feel.",
-        price: 1240,
-        category: "hoodies",
-        type: "hoodie",
-        collection: { slug: "night-drip", name: "Night Drip" },
-        cardVariant: "street",
-        images: [photoT1, photo4, photoT2],
-        availableSizes: ["S", "M", "L", "XL"],
-        availableColors: ["#E9E9E9", "#171819", "#7B5B45"],
-    },
-    {
-        id: 9,
-        name: "Beanie",
-        description:
-            "Rib-knit beanie designed for snug fit and minimalist everyday styling.",
-        price: 420,
-        category: "accessories",
-        type: "accessory",
-        collection: { slug: "clean-lab", name: "Clean Lab" },
-        cardVariant: "clean",
-        images: [photo1, photoT2, photo3],
-        availableSizes: ["One Size"],
-        availableColors: ["#171819", "#FFFFFF", "#2E4E6D"],
-    },
-];
+// Cards (Home/Search/related-products grids) only ever read a variant's id
+// and price, never its per-variant options — so the list fetch skips
+// `*options`/`*variants.options` and only the single-product detail fetch
+// (which drives the option picker) pays for them.
+const STORE_PRODUCT_LIST_FIELDS = [
+    "*collection",
+    "*images",
+    "*type",
+    "*categories",
+    "*variants",
+    "*variants.prices",
+    "*variants.calculated_price",
+    "+variants.inventory_quantity",
+    "+variants.manage_inventory",
+    "+thumbnail",
+].join(",");
+const STORE_PRODUCT_DETAIL_FIELDS = [STORE_PRODUCT_LIST_FIELDS, "*options", "*variants.options"].join(
+    ","
+);
+// A price list ("Sale" type, set up in the Medusa admin — no promo code
+// involved) makes `calculated_amount` drop below `original_amount` for the
+// products/variants it covers. When there's no active discount the two are
+// equal, so `originalPrice` naturally stays null and no "was" price shows.
+const getVariantPrice = (variant) => {
+    const calculatedAmount = Number(variant?.calculated_price?.calculated_amount);
+    const originalAmount = Number(variant?.calculated_price?.original_amount);
+    const hasDiscount =
+        Number.isFinite(originalAmount) &&
+        Number.isFinite(calculatedAmount) &&
+        originalAmount > calculatedAmount;
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    if (Number.isFinite(calculatedAmount)) {
+        return { price: calculatedAmount, originalPrice: hasDiscount ? originalAmount : null };
+    }
 
-const toSummary = (product) => ({
-    id: product.id,
-    name: product.name,
-    description: product.description,
-    price: product.price,
-    category: product.category,
-    type: product.type,
-    collection: product.collection,
-    cardVariant: product.cardVariant,
-    image: product.images[0],
+    const firstPriceAmount = Number(variant?.prices?.[0]?.amount);
+    return { price: Number.isFinite(firstPriceAmount) ? firstPriceAmount : 0, originalPrice: null };
+};
+
+// Inventory that isn't tracked at all (`manage_inventory: false`) means the
+// variant is always orderable — only a *tracked* quantity of zero counts as
+// out of stock.
+const isVariantInStock = (variant) =>
+    variant?.manage_inventory === false || Number(variant?.inventory_quantity) > 0;
+
+const mapVariant = (variant) => ({
+    id: variant?.id || null,
+    title: variant?.title || "",
+    ...getVariantPrice(variant),
+    inStock: isVariantInStock(variant),
+    options: (variant?.options || []).map((option) => ({
+        title: option?.option?.title || "",
+        value: option?.value ?? "",
+    })),
 });
 
+const mapProduct = (product) => {
+    const variants = (product?.variants || []).map(mapVariant);
+    const sortedVariants = [...variants].sort((a, b) => a.price - b.price);
+    const images = [...new Set((product?.images || []).map((image) => image?.url).filter(Boolean))];
+    const categories = (product?.categories || []).map((category) => ({
+        id: category.id,
+        name: category.name,
+        handle: category.handle,
+    }));
+    const fingerprint = [
+        product?.collection?.handle,
+        product?.collection?.title,
+        product?.type?.value,
+        product?.type?.name,
+        ...categories.flatMap((category) => [category.handle, category.name]),
+    ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+    return {
+        id: product.id,
+        name: product.title,
+        description: product.description || "",
+        price: sortedVariants[0]?.price || 0,
+        originalPrice: sortedVariants[0]?.originalPrice || null,
+        categories,
+        collection: product?.collection
+            ? {
+                  id: product.collection.id,
+                  name: product.collection.title || product.collection.name,
+                  slug: product.collection.handle,
+              }
+            : null,
+        cardVariant: fingerprint.includes("hood")
+            ? "street"
+            : fingerprint.includes("accessor") ||
+                fingerprint.includes("cap") ||
+                fingerprint.includes("bag")
+              ? "clean"
+              : "classic",
+        image: images[0] || product?.thumbnail || "",
+        variantId: sortedVariants[0]?.id || null,
+        inStock: sortedVariants[0]?.inStock ?? true,
+        images,
+        variants,
+        options: (product?.options || []).map((option) => ({
+            id: option?.id,
+            title: option?.title || "",
+            values: [
+                ...new Set((option?.values || []).map((value) => value?.value).filter(Boolean)),
+            ],
+        })),
+    };
+};
+
+const PRODUCTS_PAGE_SIZE = 100;
+
+// A flat `limit: 100` silently dropped every product past the first page —
+// the catalog pages filter/sort client-side over the full list, so anything
+// beyond that cap just vanished with no error and no indication. Paging
+// through `count` here keeps that client-side approach but guarantees the
+// full catalog is actually loaded first.
 const getProducts = async () => {
-    await sleep(120);
-    return productCatalog.map(toSummary);
+    const regionId = await resolveRegionId();
+    const products = [];
+    let offset = 0;
+    let count = Infinity;
+
+    while (offset < count) {
+        const response = await sdk.store.product.list({
+            fields: STORE_PRODUCT_LIST_FIELDS,
+            limit: PRODUCTS_PAGE_SIZE,
+            offset,
+            region_id: regionId,
+        });
+
+        products.push(...(response.products || []));
+        count = response.count ?? products.length;
+        offset += PRODUCTS_PAGE_SIZE;
+
+        if (!response.products?.length) break;
+    }
+
+    return products.map(mapProduct);
 };
 
 const getProductById = async (id) => {
-    await sleep(120);
-    return productCatalog.find((product) => product.id === Number(id)) || null;
+    const regionId = await resolveRegionId();
+    const { product } = await sdk.store.product.retrieve(id, {
+        fields: STORE_PRODUCT_DETAIL_FIELDS,
+        region_id: regionId,
+    });
+
+    return product ? mapProduct(product) : null;
 };
 
-const getProductName = (id) => {
-    const product = productCatalog.find((item) => item.id === Number(id));
-    return product ? product.name : `Product ${id}`;
-};
-
-export { getProducts, getProductById, getProductName };
+export { getProducts, getProductById };

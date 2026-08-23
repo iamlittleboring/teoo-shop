@@ -1,7 +1,7 @@
 import { Analytics } from "@vercel/analytics/react";
 import { RouterProvider } from "react-router-dom";
 
-import { CartProvider, FavoritesProvider, ThemeContextProvider } from "@shared/lib";
+import { AuthProvider, CartProvider, ThemeContextProvider } from "@shared/lib";
 
 import router from "./router";
 import { AppThemeProvider } from "./theme";
@@ -9,14 +9,14 @@ import { AppThemeProvider } from "./theme";
 const App = () => {
     return (
         <ThemeContextProvider>
-            <FavoritesProvider>
+            <AuthProvider>
                 <CartProvider>
                     <AppThemeProvider>
                         <RouterProvider router={router} />
                         <Analytics />
                     </AppThemeProvider>
                 </CartProvider>
-            </FavoritesProvider>
+            </AuthProvider>
         </ThemeContextProvider>
     );
 };
